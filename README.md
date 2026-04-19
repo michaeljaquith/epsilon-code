@@ -3,7 +3,7 @@
 Implementation accompanying the paper:
 
 > **Beyond Hallucination Detection: Measuring Consequential Uncertainty in LLM-Generated Code**
-> [Author], arXiv 2026
+> Michael Jaquith, arXiv 2026
 
 ## What it does
 
