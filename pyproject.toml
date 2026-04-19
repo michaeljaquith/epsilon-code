@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "epsilon-codegen"
+version = "0.1.0"
+description = "Token-level uncertainty quantification for LLM code generation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+    "openai>=1.0.0",
+    "numpy>=1.24.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+benchmark = [
+    "uqlm>=0.5.0",
+    "langchain-openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["epsilon*"]

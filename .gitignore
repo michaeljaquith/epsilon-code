@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+*.log
+*.json
+!benchmark/example_results.json
+.venv/
+venv/
+.DS_Store
