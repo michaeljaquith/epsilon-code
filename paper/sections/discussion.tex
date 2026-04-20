@@ -1,0 +1,66 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+\paragraph{Confident wrongness.}
+$\varepsilon$ cannot detect decisions the model makes confidently and incorrectly.
+Scenario~B demonstrates this directly: GPT-4o generates v0 OpenAI SDK syntax
+with high confidence; $\eps$ fires on surrounding function signature decisions,
+not on the core API error. The system faithfully reports ``model was confident
+about this choice'' --- which is true. $\eps$ is a decision-risk signal, not a
+correctness oracle. Confident wrongness is an inherent limitation of any
+single-generation uncertainty measure.
+
+\paragraph{Model calibration.}
+Thresholds (0.30 / 0.65 / 0.95) are calibrated to GPT-4o-2024-08-06.
+Different models have different log-probability distributions and may require
+recalibration. The AST filtering logic and max aggregation are model-agnostic;
+only the threshold values require tuning for a new model.
+
+\paragraph{Type~3 false positive floor.}
+The 50\% false positive rate on GPT-4o (60\% on smaller models) on the LOW benchmark set is driven by
+Type~3 implementation-approach uncertainty on simple utility function prompts.
+In production use, code generation tools are primarily invoked for API
+integration and library selection tasks --- the HIGH domain --- where Type~3
+uncertainty is substantially rarer. The practical false positive rate is
+expected to be lower than the benchmark figure suggests.
+
+\paragraph{Confidently-resolved domains.}
+A second category of limitation is \emph{confidently-resolved domains}:
+prompts where every model has converged on a strong training-data prior,
+producing $\eps_\text{file} = 0.000$ regardless of whether the confident
+choice is correct. In our benchmark, current UTC datetime retrieval and
+HTTP GET to JSON parsing fall into this category across all three models.
+These domains are invisible to $\eps$ --- the system correctly reports that
+the model was certain, but does not know whether that certainty is warranted.
+For widely-deployed APIs with stable, well-documented interfaces, this is the
+expected and desirable behavior. For domains where a confident model choice
+is systematically wrong (e.g., a deprecated-but-confidently-recalled API),
+$\eps$ provides no signal, as demonstrated by Scenario~B.
+
+\paragraph{Adaptive threshold cold start.}
+The K-NN adaptive threshold requires a warm neighborhood (5--20 similar prior
+runs) before activating. New prompt types begin with absolute thresholds until
+sufficient history accumulates. For Scenario~E, 13 runs were required before
+the MAD domain activated --- a meaningful investment for low-volume use cases.
+
+\subsection{Future Work}
+
+\paragraph{Pipeline propagation.}
+$\varepsilon$ is designed as an accumulating primitive: in a multi-stage
+generation pipeline (e.g., plan $\to$ scaffold $\to$ implementation), each
+stage's $\eps$ could be propagated forward, with cross-stage accumulation
+triggering intervention at configurable thresholds. Pipeline propagation is
+not yet implemented.
+
+\paragraph{Per-token intervention.}
+The current system aggregates to file and function level. Token-level
+alternatives are already available in \texttt{peak\_tokens}; a future interface
+could present the specific alternative tokens at the exact flagged position,
+enabling targeted re-prompting rather than full re-generation.
+
+\paragraph{Adapter for open-source models.}
+Log-probabilities are available from OpenAI and Anthropic APIs and from
+open-source models via vLLM or Ollama. A thin adapter layer would make the
+$\eps$ system model-agnostic at the infrastructure level.

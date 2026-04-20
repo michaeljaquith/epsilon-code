@@ -1,0 +1,298 @@
+\section{Evaluation: Five Failure Scenarios}
+\label{sec:evaluation}
+
+We evaluate $\eps$ across five scenarios spanning four distinct failure
+classes. All five scenarios use GPT-4o-2024-08-06 via the OpenAI API with
+\texttt{logprobs=True, top\_logprobs=5}. The system prompt specifies
+naming conventions (concise conventional parameter names, direct verb-noun
+function names) to suppress Type~1 cosmetic uncertainty before aggregation.
+Each scenario is implemented as a standalone script and is included in the
+repository. Multi-model validation extending these results to two additional
+OpenAI models appears in Section~\ref{sec:eval-multimodel}.
+
+\subsection{Scenario A: Deprecated API}
+\label{sec:eval-a}
+
+\paragraph{Setup.}
+The Stripe payments API underwent a major deprecation between v6 and v7:
+\texttt{stripe.Charge.create()} was removed in favour of
+\texttt{stripe.PaymentIntent.create()}, which requires a two-step
+intent-then-confirm flow. Both APIs are heavily represented in the model's
+training data, as the deprecation occurred during a period of active
+online documentation.
+
+\paragraph{Prompt.}
+\textit{``Write a Python function to charge a customer's card for \$50 using
+the Stripe Python SDK in a FastAPI application. The customer\_id is passed
+in as a parameter.''} Context: Python 3.11, Stripe SDK installed.
+
+\paragraph{Result: \textsc{paused}, $\eps = 0.914$.}
+The highest-entropy token in the generated function is the method selector
+immediately following the \texttt{stripe} module reference: the token
+\texttt{.Ch} (beginning of \texttt{Charge}) appears with probability 0.52,
+while \texttt{.Payment} (beginning of \texttt{PaymentIntent}) appears with
+probability 0.47 --- a near-50/50 split on a production-critical decision.
+Secondary flags include route URL naming (\texttt{/charge\_customer} vs.\
+\texttt{/charge-customer}, $\eps = 0.75$) and return value design
+(\texttt{payment\_intent.id} vs.\ the full object, $\eps = 0.48$).
+
+\paragraph{Finding.}
+The model's uncertainty faithfully reflects the state of its training data:
+both API paths are real, both are documented, and neither is definitively
+preferred by the available evidence. A developer reviewing this \textsc{paused}
+output knows to verify which API version their installed Stripe SDK supports
+before committing.
+
+\subsection{Scenario B: Confident Wrongness}
+\label{sec:eval-b}
+
+\paragraph{Setup.}
+The OpenAI Python SDK introduced a breaking API change between v0 and v1.
+The v0 interface (\texttt{openai.ChatCompletion.create(...)}) raises an
+\texttt{AttributeError} on any SDK version above 1.0. GPT-4o-2024-08-06
+was trained predominantly on v0 documentation and generates v0 syntax
+with high confidence on a neutral prompt.
+
+\paragraph{Prompt.}
+\textit{``Write a Python function that calls GPT-4 with a user message and
+returns the response text.''} Context: Python 3.11, openai package installed.
+
+\paragraph{Result: \textsc{paused}, $\eps = 0.551$.}
+The model generated v0 syntax --- \texttt{openai\allowbreak.ChatCompletion\allowbreak.create(\ldots)}
+with \texttt{response\allowbreak[`choices']\allowbreak[0]\allowbreak[`message']\allowbreak[`content']}
+access --- with high confidence. The \textsc{paused} status was triggered not by the API
+choice itself but by uncertainty in the function's parameter design: the
+model was uncertain whether to accept a raw string
+(\texttt{user\_message}), a pre-formatted dict (\texttt{message}), or a
+full messages list (\texttt{messages}), and whether to expose the model
+name as a parameter.
+
+\paragraph{Finding.}
+This scenario demonstrates $\eps$'s honest boundary. The system cannot
+detect a decision the model makes confidently and incorrectly: it reports
+``the model was certain about \texttt{openai.ChatCompletion.create}'' ---
+which is true. What $\eps$ provides is \emph{review pressure}: the
+\textsc{paused} status prompts the developer to examine the generated
+function, during which they encounter the deprecated v0 call. The indirection
+is not a failure; it is the mechanism. A tool that drove review of every
+uncertain decision would surface this bug whenever the model was uncertain
+about anything in the same generation.
+
+\subsection{Scenario C: Syntax Split}
+\label{sec:eval-c}
+
+\paragraph{Setup.}
+SQLAlchemy 1.4 introduced a compatibility layer and SQLAlchemy 2.0
+completed a full ORM query API migration. The 1.x session query interface
+(\texttt{db.query(Model).filter(...)}) and the 2.0 execute interface
+(\texttt{db.execute(select(Model)).scalars().all()}) coexist in the model's
+training data due to the long overlap period.
+
+\paragraph{Prompt.}
+\textit{``Write a Python function that queries all active users from a
+SQLAlchemy database session and returns them as a list. The codebase has
+been around for a few years.''} Context: Python 3.11, SQLAlchemy installed.
+
+\paragraph{Result: \textsc{flagged}, $\eps = 0.435$.}
+The model chose 1.x syntax (\texttt{db.query(User).filter(User.active ==
+True).all()}). The primary flag was on the import path: the model was
+uncertain whether to import \texttt{User} from a local \texttt{models}
+module or construct the select via \texttt{sqlalchemy.orm}. The query
+method decision itself fell below the flag threshold, consistent with the
+model having a moderate preference for 1.x.
+
+\paragraph{Finding.}
+\textsc{flagged} rather than \textsc{paused} correctly reflects the
+situation: the model has a preference, but it is not certain. A developer
+reviewing this output knows to verify which SQLAlchemy version is pinned
+in \texttt{requirements.txt}. If the project targets SQLAlchemy 2.0,
+the generated query will emit a deprecation warning and will eventually
+break.
+
+\subsection{Scenario D: Compatibility Mismatch}
+\label{sec:eval-d}
+
+\paragraph{Setup.}
+This scenario introduces a qualitatively different failure class: not a
+single uncertain decision but two \emph{locally reasonable} decisions that
+combine into a silent bug. In a FastAPI application, using
+\texttt{async def} for an endpoint handler and \texttt{requests.get()} for
+the HTTP call is individually defensible --- but the combination blocks
+the event loop under concurrent load, degrading the entire application to
+synchronous throughput.
+
+\paragraph{Prompt.}
+\textit{``Write a FastAPI endpoint that accepts a city name as a query
+parameter, fetches the current weather for that city from an external
+weather API, and returns the result as JSON.''} Context: Python 3.11,
+FastAPI installed, requests library used throughout the existing codebase.
+
+\paragraph{Result: \textsc{paused}, $\eps = 0.812$.}
+The model generated \texttt{async def get\_weather(...)} with
+\texttt{requests.get(url)} inside the body --- the mismatch. Notably,
+neither decision individually produced a high-$\eps$ token: the
+\texttt{async} keyword token showed $\eps = 0.26$ (the model had a mild
+preference for async given the FastAPI context), and the \texttt{requests}
+import showed $\eps = 0.31$ (the model correctly reflected that requests
+was the established library in the described codebase). The elevated
+file-level $\eps$ came from uncertainty in the URL construction and API key
+handling, not from the compatibility decision itself. A mismatch-detection
+pass --- comparing the presence of \texttt{async def} against blocking
+HTTP client calls in the function body --- surfaced the bug explicitly in
+the output.
+
+\paragraph{Finding.}
+This is the hardest class of code generation failure to detect: two
+individually confident decisions that are jointly incompatible.
+$\eps$ does not directly flag the compatibility issue --- the model was
+not uncertain about either component. What $\eps$ provides is the
+\textsc{paused} status that prompts review, and the mismatch-detection
+post-processor that makes the compatibility violation explicit when it
+exists. The failure class argues for extending $\eps$ with cross-decision
+consistency checks as a future contribution.
+
+\subsection{Scenario E: Multi-Function Module}
+\label{sec:eval-e}
+
+\paragraph{Setup.}
+Scenarios A--D each isolate a single consequential decision. Scenario~E
+presents four simultaneous decisions that are also interdependent: password
+hashing library (bcrypt / argon2 / passlib / hashlib), JWT library (PyJWT
+/ python-jose / authlib), SQLAlchemy style (1.x / 2.0), and datetime
+handling (\texttt{datetime.utcnow()} deprecated vs.\ timezone-aware
+\texttt{datetime.now(timezone.utc)}). These decisions must be made
+consistently across six functions: \textsc{register\_user}, \textsc{login},
+\textsc{verify\_token}, \textsc{refresh\_token},
+\textsc{request\_password\_reset}, and \textsc{reset\_password}.
+
+\paragraph{Prompt.}
+A complete Python authentication module with the above six functions,
+specifying their contracts but not their implementation. Context: Python
+3.11, FastAPI backend, PostgreSQL via SQLAlchemy, no existing authentication
+library committed.
+
+\paragraph{Result: \textsc{paused} on all 16 runs, $\eps \in [0.69, 0.92]$.}
+Across 16 independent runs, the model chose different libraries: passlib
+(2 runs), bcrypt (1 run), PyJWT (2 runs), python-jose (1 run), and mixed
+combinations in the remainder. The model's cross-run inconsistency reflects
+genuine uncertainty about the right choice --- but any single run \emph{looks}
+confident, because the model commits to one library in the first function
+and uses it consistently within that generation.
+
+A consistent intra-run pattern emerged: functions generated early in the
+context (\textsc{register\_user}, \textsc{login}) showed $\eps = 0.40$--$0.58$
+at the library import decision; functions generated later
+(\textsc{verify\_token}, \textsc{reset\_password}) frequently showed
+$\eps = 0.000$ at those same positions, because the model had already
+committed to a library and was executing within its established convention.
+This \emph{uncertainty collapse} is itself a meaningful signal: the
+high-risk decision window is the first function of each library domain.
+
+Per-function $\eps$ breakdown and cross-function consistency analysis ---
+flagging cases where the model used different JWT libraries in
+\textsc{login} and \textsc{verify\_token} --- are provided by the demo
+output.
+
+\paragraph{Finding.}
+The multi-function setting reveals both the power and the limit of $\eps$.
+Within a single generation, it correctly identifies the first-function
+decision point as the highest-risk location. Across generations, the
+variation in library choice confirms that the model's uncertainty is real.
+
+\subsection{Summary}
+
+Table~\ref{tab:scenarios} and Figure~\ref{fig:scenarios} summarise the
+five scenarios. The four failure classes --- deprecated API, confident wrongness, syntax
+split, and compatibility mismatch --- are qualitatively distinct.
+The first and third are detectable directly by $\eps$. The second is
+detectable indirectly, through the review pressure $\eps$ creates. The
+fourth requires augmenting $\eps$ with cross-decision consistency checks.
+
+\begin{table}[h]
+\centering
+\caption{Scenario summary. All runs on GPT-4o-2024-08-06.
+         ``Indirect'' detection (B) means $\eps$ drives review that surfaces
+         the bug, not that $\eps$ directly flags the erroneous token.}
+\label{tab:scenarios}
+\begin{tabular}{llccc}
+\toprule
+\textbf{Scenario} & \textbf{Failure class} & \textbf{$\eps$}
+                  & \textbf{Status} & \textbf{Detection} \\
+\midrule
+A --- Stripe deprecation    & Deprecated API      & 0.914      & \textsc{paused}  & Direct \\
+B --- OpenAI SDK v0         & Confident wrongness & 0.551      & \textsc{paused}  & Indirect \\
+C --- SQLAlchemy style      & Syntax split        & 0.435      & \textsc{flagged} & Direct \\
+D --- FastAPI async/sync    & Compatibility       & 0.812      & \textsc{paused}  & Augmented \\
+E --- Auth module (16 runs) & Multi-decision      & 0.69--0.92 & \textsc{paused}  & Direct (all runs) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{fig3_scenarios.png}
+\caption{Five evaluation scenarios with $\varepsilon$ score and failure class.
+         Orange dashed line: soft threshold (0.30, \textsc{flagged}).
+         Red dashed line: hard threshold (0.65, \textsc{paused}).
+         Scenario~E bar shows the 16-run mean; the annotation gives the full
+         range $[0.69, 0.92]$.}
+\label{fig:scenarios}
+\end{figure}
+
+\subsection{Multi-Model Validation}
+\label{sec:eval-multimodel}
+
+To assess whether the $\eps$ signal is specific to GPT-4o or holds across
+models, we re-ran the 30-prompt benchmark on two additional OpenAI models:
+\texttt{gpt-4o-mini-2024-07-18} and \texttt{gpt-4-turbo-2024-04-09}.
+All settings were identical to the five-scenario runs (same prompts,
+same system prompt, \texttt{logprobs=True, top\_logprobs=5}).
+
+\begin{table}[h]
+\centering
+\caption{Cross-model detection results on the 30-prompt benchmark
+         (20 HIGH prompts, 10 LOW prompts). Detection rate is on HIGH prompts;
+         FP rate is on LOW prompts.}
+\label{tab:multimodel}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{HIGH detection} & \textbf{LOW FP rate} & \textbf{Note} \\
+\midrule
+GPT-4o-2024-08-06       & \textbf{85\%} (17/20) & 50\% (5/10) & Best calibrated \\
+GPT-4o-mini-2024-07-18  & 70\% (14/20)          & 60\% (6/10) & Lower det.\ + higher FP \\
+GPT-4-turbo-2024-04-09  & 70\% (14/20)          & 60\% (6/10) & Same rate; different missed set \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{fig4_multimodel.png}
+\caption{$\varepsilon$ detection rate (HIGH prompts) and false positive rate
+         (LOW prompts) across three OpenAI models on the 30-prompt benchmark.
+         Detection correlates with model calibration quality (GPT-4o highest
+         at 85\%; two additional models at 70\%).}
+\label{fig:multimodel}
+\end{figure}
+
+The $\eps$ signal holds across all three models. GPT-4o achieves the highest
+detection rate, which we attribute to better logprob calibration: when
+GPT-4o is genuinely uncertain about an API version decision, that uncertainty
+is more accurately reflected in the token probability distribution than in
+smaller or older models. This pattern is consistent with the hypothesis that
+logprob calibration quality affects $\eps$ signal strength --- GPT-4o's
+better-calibrated token distributions may reflect genuine uncertainty more
+accurately than older or smaller models. Disentangling calibration from
+capability, training-data recency, and sampling variance would require
+broader model coverage across vendors; we leave this as future work.
+
+\paragraph{Consistent misses across all models.}
+Three prompts produced $\eps_\text{file} = 0.000$ across all models and all
+runs: current UTC datetime retrieval, HTTP GET to JSON parsing, and (for
+GPT-4-turbo) PostgreSQL query construction. These are domains where every
+model has converged on a strong training-data prior: the API choice is
+effectively resolved. This is consistent with the $\eps$ story, not a
+counter-example to it --- these domains have resolved their training-data
+split, so there is genuinely no uncertainty to detect. We term these
+\emph{confidently-resolved domains}; their limitations are discussed in
+Section~\ref{sec:discussion}.

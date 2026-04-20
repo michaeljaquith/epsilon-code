@@ -1,0 +1,237 @@
+\section{The \texorpdfstring{$\varepsilon$}{epsilon} Primitive}
+\label{sec:epsilon}
+
+\subsection{Token-Level Uncertainty}
+\label{sec:eps-token}
+
+Modern LLM APIs return, alongside each generated token, a log-probability
+distribution over the top-$k$ alternative tokens at that position. For a
+token at position $t$ with top-$k$ alternatives $\{(v_1, p_1), \ldots, (v_k, p_k)\}$:
+
+\begin{equation}
+  \eps_t = \frac{-\sum_{i=1}^{k} p_i \log p_i}{\log k}
+  \label{eq:eps-token}
+\end{equation}
+
+This is the normalized partial Shannon entropy over the top-$k$ distribution.
+$\eps_t \in [0, 1]$: zero when the model is certain (all probability mass on
+one token); one when probability is uniform across all $k$ alternatives.
+We use $k = 5$ throughout, matching the maximum provided by the OpenAI API.
+
+\paragraph{Why partial entropy.} The full vocabulary entropy is unavailable
+from the API --- only the top-$k$ log-probabilities are returned. Partial
+entropy over the top-5 is an underestimate of full entropy, but it captures
+the consequential signal: if the model is split between two APIs, those two
+alternatives appear in the top-5 with high probability mass. A model that is
+certain produces $\eps_t \approx 0$ even under partial measurement.
+
+\paragraph{Connection to the name.} The use of $\eps$ (epsilon) is deliberate.
+In numerical analysis, epsilon denotes a small perturbation that propagates
+through a computation. A high-$\eps$ token is a perturbation at a specific
+decision point: the model was nearly as likely to choose differently, and that
+different choice would have propagated through the rest of the generation.
+
+\subsection{Three Types of Code Generation Uncertainty}
+\label{sec:eps-taxonomy}
+
+Empirical analysis of our 30-prompt calibration benchmark reveals three
+categorically distinct types of token-level uncertainty in generated code.
+This taxonomy is the foundation for the filtering approach in
+Section~\ref{sec:eps-filtering}.
+
+\paragraph{Type 1 --- Cosmetic uncertainty (naming).}
+The model is uncertain about what to \emph{call} something. Example: splitting
+between \texttt{sort\_list}, \texttt{sort\_integers}, and \texttt{sort\_numbers}
+for a function that sorts integers. The token-level $\eps$ is real and can be
+high (0.7--0.9), but any choice produces equally correct code. This uncertainty
+is driven by the model having no naming convention to follow. It dominates
+naive entropy measurements on simple utility function prompts: in our benchmark,
+the top uncertainty flag for 9 of 10 LOW prompts was a function or parameter
+name on the first line of the generated function.
+
+\paragraph{Type 2 --- Consequential uncertainty (API and library decisions).}
+The model is uncertain which \emph{API or library} to use, where the choice
+affects correctness, compatibility, or safety. Example: splitting between
+\texttt{stripe.Charge.create()} ($\eps = 0.73$, probability 0.52) and
+\texttt{stripe.PaymentIntent.create()} (probability 0.47). This is the
+target signal. The split reflects genuine uncertainty about which version of
+the API is appropriate --- uncertainty that no naming convention resolves,
+because the split is semantic rather than stylistic.
+
+\paragraph{Type 3 --- Implementation-approach uncertainty (algorithm structure).}
+The model is uncertain which \emph{algorithm or structure} to use, where
+multiple approaches are all correct. Example: recursive vs.\ iterative
+Fibonacci; for-loop vs.\ list comprehension for deduplication. The token-level
+split is real, and the choices produce structurally different code, but all
+options produce correct output for well-specified problems. This type is
+irreducible without semantic knowledge of the function specification. It
+constitutes the residual false positive floor on simple utility function prompts.
+
+The practical significance of this taxonomy is that only Type~2 uncertainty
+correlates with real risk. Types~1 and~3 are noise to be minimized.
+
+\subsection{AST-Based Cosmetic Filtering}
+\label{sec:eps-filtering}
+
+We eliminate Type~1 uncertainty using the generated code's abstract syntax
+tree. After stripping markdown fences and parsing with Python's \texttt{ast}
+module, we identify \emph{declaration positions}: source ranges where the
+model is choosing a name rather than an API.
+
+\textbf{Filtered (cosmetic):}
+\begin{itemize}[noitemsep]
+  \item Function and method names (the identifier following \texttt{def})
+  \item Parameter names (\texttt{ast.arg} nodes)
+  \item Local variable names (\texttt{ast.Name} in \texttt{Store} context:
+    assignments, \texttt{for} targets, \texttt{with}-\texttt{as} targets,
+    comprehension targets)
+\end{itemize}
+
+\textbf{Not filtered (consequential):}
+\begin{itemize}[noitemsep]
+  \item Import targets (\texttt{ast.alias}) --- module and symbol selection matters
+  \item Attribute access (\texttt{ast.Attribute}) --- method and property selection matters
+  \item Keywords (\texttt{async}, \texttt{def}, \texttt{return}, \ldots) --- structural choices matter
+  \item Type annotations --- may carry compatibility information
+\end{itemize}
+
+Token-to-declaration matching uses range overlap rather than exact column
+matching, because BPE tokenization introduces a leading space (the token
+\texttt{~find} starts at column 3 when the identifier \texttt{find\_max}
+starts at column 4). Multi-token identifiers (\texttt{find} $+$ \texttt{\_max})
+are handled naturally by range overlap.
+
+A pure-identifier guard prevents over-filtering: tokens such as \texttt{(db}
+combine a structurally-significant delimiter (\texttt{(}) with the first
+character of a parameter name. Only tokens where the stripped value is a
+pure identifier (or a delimiter-prefixed identifier where all top alternatives
+share the same delimiter) are excluded.
+
+\textbf{Effect on benchmark.} Table~\ref{tab:filtering} shows the effect of
+each filtering stage on the LOW-prompt false positive rate.
+
+\begin{table}[h]
+\centering
+\caption{False positive rate on LOW prompts (10 simple utility functions)
+         under successive filtering stages.}
+\label{tab:filtering}
+\begin{tabular}{lc}
+\toprule
+\textbf{Configuration} & \textbf{FP Rate} \\
+\midrule
+Naive token entropy (no filtering)      & 90\% \\
++ Whitespace / comment filtering        & 90\% \\
++ System prompt naming conventions      & 60\% \\
++ AST declaration filtering             & 60\% \\
++ Fence-format stripping                & 50\% \\
+\midrule
+Residual (Type 3 only)                  & 50\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The naming convention and AST filter address the same underlying phenomenon
+--- cosmetic token uncertainty --- through complementary mechanisms: the
+system prompt suppresses uncertain naming at generation time, while AST
+filtering removes cosmetic tokens that survive generation. Their effects are
+largely overlapping on this benchmark. When the system prompt naming
+convention is removed, the AST filter alone reduces the FP rate from 90\% to
+70\%; the two approaches combined reduce it to 50\%. AST filtering's
+independent contribution is most visible in adversarial settings where the
+system prompt is absent or ignored by the model.
+
+The residual 50\% consists entirely of Type~3 implementation-approach
+uncertainty on simple utility function prompts (Fibonacci, list operations,
+binary search). These prompts are not representative of production code
+generation tasks (API integration, library use) where Type~3 uncertainty
+is substantially rarer.
+
+\subsection{File- and Function-Level Aggregation}
+\label{sec:eps-aggregation}
+
+\paragraph{Max aggregation.}
+The file- or function-level $\eps$ is the maximum token-level $\eps$ over
+all consequential code tokens above a noise floor $\delta$:
+
+\begin{equation}
+  \eps_{\text{file}} = \max \{ \eps_t : t \text{ is a code token} \wedge \eps_t > \delta \}
+  \label{eq:eps-file}
+\end{equation}
+
+We use $\delta = 0.30$ throughout. Tokens with $\eps_t \leq \delta$ represent
+decisions where the model's top alternative had probability below $e^{-0.30} \approx 0.74$
+of the chosen token --- effectively certain choices.
+
+The compound alternative $1 - \prod(1 - \eps_t)$ was evaluated and rejected:
+for a 200-token function with even moderate per-token entropy, the compound
+score converges to $1.0$ regardless of whether any single decision is
+genuinely risky. Max is bounded, interpretable, and answers the relevant question for
+code review: \emph{how uncertain was the model at its single worst
+consequential decision?}
+
+\paragraph{Per-function aggregation.}
+Function boundaries are detected from \texttt{def} and \texttt{async def}
+statements in the generated code. For multi-function outputs, $\eps$ is
+computed independently per function, enabling localization at function
+granularity.
+
+\paragraph{Max vs.\ mean ablation.}
+An alternative aggregation --- mean $\eps$ over all consequential tokens above
+$\delta$ --- was evaluated empirically across all 90 runs of the 30-prompt
+benchmark (3 models $\times$ 30 prompts). Max and mean produced
+\emph{identical} fire/no-fire decisions for every prompt on every model.
+When $\eps$ fires, the peak token dominates the mean substantially (e.g., a
+single token with $\eps_t = 0.908$ in a 5-token contributing set yields
+$\eps_\text{mean} \approx 0.60$, well above any plausible threshold). When
+$\eps_\text{file} = 0.000$, no token contributes and both measures are zero.
+This empirical equivalence validates the max-based design: max preserves the
+interpretability of pointing to the single worst consequential decision while
+producing the same practical outcomes as mean.
+
+\subsection{Status Thresholds and Intervention Protocol}
+\label{sec:eps-thresholds}
+
+\begin{table}[h]
+\centering
+\caption{$\varepsilon$ status thresholds and recommended developer actions.
+         Thresholds calibrated empirically against GPT-4o-2024-08-06.}
+\label{tab:thresholds}
+\begin{tabular}{llp{5.5cm}}
+\toprule
+\textbf{Status} & \textbf{Condition} & \textbf{Recommended action} \\
+\midrule
+\textsc{complete} & $\eps < 0.30$ & No intervention required \\
+\textsc{flagged}  & $0.30 \leq \eps < 0.65$ & Developer reviews flagged tokens \\
+\textsc{paused}   & $0.65 \leq \eps < 0.95$ & Pause workflow; present alternatives \\
+\textsc{aborted}  & $\eps \geq 0.95$ & Refuse output; re-prompt or escalate \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Adaptive ensemble threshold.}
+After sufficient historical runs on similar prompts (retrieved via
+$k$-nearest-neighbor lookup in embedding space), $\eps$ transitions from
+absolute thresholds to a statistically-derived threshold. The transition uses
+a two-condition domain switch:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{MAD domain} ($n \geq 5$ neighbors, $\geq 500$ cumulative code tokens):
+    threshold $= \text{median}(\eps) + 3.0 \cdot \text{MAD}(\eps) / 0.6745$,
+    the modified Z-score of Iglewicz and Hoaglin~\cite{iglewicz1993detect}.
+  \item \textbf{Conformal domain} ($n \geq 20$ neighbors, $\geq 3{,}000$ cumulative
+    code tokens): empirical 95th-percentile of the neighborhood $\eps$
+    distribution, providing a conformal coverage guarantee.
+\end{itemize}
+
+Calibration on 16 Scenario~E runs shows that the MAD domain activates at
+run 13 (totaling 515 code tokens across the neighborhood), as predicted by
+the token-budget formula. For this scenario, where $\eps_\text{file} \in
+[0.69, 0.92]$ on every run, the MAD threshold stabilizes above the absolute
+hard threshold (0.65), providing no additional discrimination --- correctly,
+since the absolute threshold already fires on every run. The adaptive
+ensemble adds value in heterogeneous prompt histories where some prompt
+classes produce high-$\eps$ generations and others do not; in such settings
+it prevents the absolute threshold from firing on structurally low-$\eps$
+domains that happen to produce the occasional high-entropy token.
+Scenario~E, being uniformly high-uncertainty, saturates the adaptive
+threshold immediately.

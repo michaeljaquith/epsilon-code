@@ -1,0 +1,73 @@
+\section{Related Work}
+\label{sec:related}
+
+\subsection{LLM Uncertainty Quantification}
+
+\paragraph{Semantic entropy.}
+Kuhn et al.~\cite{kuhn2023semantic} introduce semantic entropy as a method for
+detecting hallucinations in free-form text generation. Multiple responses to
+the same prompt are generated and clustered by semantic equivalence (via
+natural language inference); high entropy across clusters indicates uncertainty.
+The method is principled and effective for factual question answering, where
+model uncertainty produces cross-generation variance. As we show in
+Section~\ref{sec:comparison}, this variance is not present for code generation
+API decisions: models generate the same (potentially wrong) API call across
+all samples.
+
+\paragraph{UQLM.}
+The UQLM library~\cite{uqlm2024} provides open-source implementations of
+multiple uncertainty scoring methods for LLM outputs, including semantic
+negentropy, semantic clustering, and conformal prediction wrappers. It is the
+closest published tool to our work and serves as our primary baseline.
+Our direct comparison (Section~\ref{sec:comparison}) shows 5\% detection rate
+(1 of 20 high-uncertainty prompts) compared to 85\% for $\eps$.
+
+\paragraph{Conformal prediction for LLMs.}
+Quach et al.~\cite{quach2023conformal} and Angelopoulos et al.~\cite{angelopoulos2022conformal}
+apply conformal prediction to construct prediction sets with coverage
+guarantees over LLM outputs. The approach is statistically rigorous but
+produces set-valued predictions over outputs rather than within-generation
+token-level signals. It also requires a calibration dataset and does not
+provide the localization (which token, which line, which function) that
+makes $\eps$ actionable for code review.
+
+\paragraph{Token-level calibration.}
+Kadavath et al.~\cite{kadavath2022language} show that LLMs are reasonably
+well-calibrated at the token level: stated confidence correlates with accuracy.
+Varshney et al.~\cite{varshney2023stitch} use token-level log-probabilities
+for selective generation, abstaining when confidence is low. Our work extends
+this line by identifying \emph{which} tokens carry meaningful uncertainty in
+code --- specifically, by filtering out cosmetic naming decisions that dominate
+naive entropy measurements. Uncertainty propagation through multi-stage ML
+pipelines is well-studied in adjacent domains~\cite{jungo2020analyzing}; the
+$\eps$ primitive is designed to support analogous propagation in code
+generation pipelines, deferred to future work.
+
+\paragraph{Code generation uncertainty and self-consistency.}
+Concurrent approaches to code generation quality estimation include
+test-based ranking (CodeT~\cite{chen2022codet} generates tests and ranks
+candidate solutions by pass rate) and repeated-sampling self-consistency
+(AlphaCode-style approaches use pass@$k$ as an implicit uncertainty proxy).
+These methods are inter-generational by construction: they require multiple
+independent samples and aggregate across them. They are therefore subject to
+the same structural limitation as UQLM for the problem we study --- a model
+that consistently generates the same API version across samples will produce
+consistent test outcomes regardless of whether the API version is correct.
+Our approach is complementary: it operates within a single generation and is
+zero-overhead.
+
+\subsection{Code Generation Quality}
+
+Recent work on evaluating LLM code generation quality focuses primarily on
+functional correctness via execution-based benchmarks (HumanEval~\cite{chen2021evaluating},
+MBPP~\cite{austin2021program}, SWE-bench~\cite{jimenez2024swebench}). These
+benchmarks measure whether generated code passes test cases, not whether the
+model was confident in its decisions. A model that passes all tests with low
+$\eps$ is reliable; a model that passes all tests with high $\eps$ on specific
+API decisions may be one dependency update away from failure.
+
+To our knowledge, no prior work treats within-generation token-level
+uncertainty as a first-class signal for code generation risk. The closest work
+is in automated program repair, where uncertainty has been used to rank repair
+candidates~\cite{ye2022selfapr}, but this operates post-generation and does
+not address the intra-generation measurement problem we identify.

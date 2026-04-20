@@ -7,6 +7,7 @@ build/
 *.log
 *.json
 !benchmark/example_results.json
+!benchmark/results/*.json
 .venv/
 venv/
 .DS_Store

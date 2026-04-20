@@ -1,0 +1,460 @@
+{
+  "timestamp": "2026-04-20T10:10:02",
+  "model": "gpt-4o",
+  "num_responses": 5,
+  "fire_threshold": 0.5,
+  "epsilon_results": [
+    {
+      "id": "low_01",
+      "label": "Sort integers",
+      "category": "LOW",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "low_02",
+      "label": "Palindrome check",
+      "category": "LOW",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "low_03",
+      "label": "Fibonacci (nth)",
+      "category": "LOW",
+      "epsilon": 0.4141,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "low_04",
+      "label": "List maximum",
+      "category": "LOW",
+      "epsilon": 0.4162,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "low_05",
+      "label": "Word frequency",
+      "category": "LOW",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "low_06",
+      "label": "Prime check",
+      "category": "LOW",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "low_07",
+      "label": "Celsius to Fahrenheit",
+      "category": "LOW",
+      "epsilon": 0.3236,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "low_08",
+      "label": "Deduplicate list",
+      "category": "LOW",
+      "epsilon": 0.3817,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "low_09",
+      "label": "Flatten one level",
+      "category": "LOW",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "low_10",
+      "label": "Binary search",
+      "category": "LOW",
+      "epsilon": 0.3692,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_01",
+      "label": "Stripe payment (A)",
+      "category": "HIGH",
+      "epsilon": 0.6605,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_02",
+      "label": "OpenAI SDK call (B)",
+      "category": "HIGH",
+      "epsilon": 0.5339,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_03",
+      "label": "SQLAlchemy query (C)",
+      "category": "HIGH",
+      "epsilon": 0.4095,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_04",
+      "label": "FastAPI async HTTP (D)",
+      "category": "HIGH",
+      "epsilon": 0.6289,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_05",
+      "label": "Password hashing",
+      "category": "HIGH",
+      "epsilon": 0.4288,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_06",
+      "label": "JWT token creation",
+      "category": "HIGH",
+      "epsilon": 0.4037,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_07",
+      "label": "Current UTC datetime",
+      "category": "HIGH",
+      "epsilon": 0.0,
+      "status": "COMPLETE",
+      "fired": false
+    },
+    {
+      "id": "high_08",
+      "label": "HTTP GET to JSON",
+      "category": "HIGH",
+      "epsilon": 0.614,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_09",
+      "label": "Redis cache get",
+      "category": "HIGH",
+      "epsilon": 0.5774,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_10",
+      "label": "PostgreSQL query",
+      "category": "HIGH",
+      "epsilon": 0.8452,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_11",
+      "label": "Pydantic model serialization",
+      "category": "HIGH",
+      "epsilon": 0.3868,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_12",
+      "label": "pandas DataFrame concat",
+      "category": "HIGH",
+      "epsilon": 0.4369,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_13",
+      "label": "boto3 S3 upload",
+      "category": "HIGH",
+      "epsilon": 0.6432,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_14",
+      "label": "Celery async task",
+      "category": "HIGH",
+      "epsilon": 0.6743,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_15",
+      "label": "Token expiry datetime",
+      "category": "HIGH",
+      "epsilon": 0.4306,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_16",
+      "label": "Pillow image resize",
+      "category": "HIGH",
+      "epsilon": 0.9324,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_17",
+      "label": "Django REST list view",
+      "category": "HIGH",
+      "epsilon": 0.8516,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_18",
+      "label": "Async HTTP GET request",
+      "category": "HIGH",
+      "epsilon": 0.3698,
+      "status": "FLAGGED",
+      "fired": true
+    },
+    {
+      "id": "high_19",
+      "label": "Schema validation",
+      "category": "HIGH",
+      "epsilon": 0.6991,
+      "status": "PAUSED",
+      "fired": true
+    },
+    {
+      "id": "high_20",
+      "label": "Parametrized test",
+      "category": "HIGH",
+      "epsilon": 0.7438,
+      "status": "PAUSED",
+      "fired": true
+    }
+  ],
+  "uqlm_results": [
+    {
+      "id": "low_01",
+      "label": "Sort integers",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_02",
+      "label": "Palindrome check",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_03",
+      "label": "Fibonacci (nth)",
+      "category": "LOW",
+      "confidence": 0.6308,
+      "fired": false
+    },
+    {
+      "id": "low_04",
+      "label": "List maximum",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_05",
+      "label": "Word frequency",
+      "category": "LOW",
+      "confidence": 0.7485,
+      "fired": false
+    },
+    {
+      "id": "low_06",
+      "label": "Prime check",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_07",
+      "label": "Celsius to Fahrenheit",
+      "category": "LOW",
+      "confidence": 0.7485,
+      "fired": false
+    },
+    {
+      "id": "low_08",
+      "label": "Deduplicate list",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_09",
+      "label": "Flatten one level",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "low_10",
+      "label": "Binary search",
+      "category": "LOW",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_01",
+      "label": "Stripe payment (A)",
+      "category": "HIGH",
+      "confidence": 0.6308,
+      "fired": false
+    },
+    {
+      "id": "high_02",
+      "label": "OpenAI SDK call (B)",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_03",
+      "label": "SQLAlchemy query (C)",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_04",
+      "label": "FastAPI async HTTP (D)",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_05",
+      "label": "Password hashing",
+      "category": "HIGH",
+      "confidence": 0.7485,
+      "fired": false
+    },
+    {
+      "id": "high_06",
+      "label": "JWT token creation",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_07",
+      "label": "Current UTC datetime",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_08",
+      "label": "HTTP GET to JSON",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_09",
+      "label": "Redis cache get",
+      "category": "HIGH",
+      "confidence": 0.6189,
+      "fired": false
+    },
+    {
+      "id": "high_10",
+      "label": "PostgreSQL query",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_11",
+      "label": "Pydantic model serialization",
+      "category": "HIGH",
+      "confidence": 0.7485,
+      "fired": false
+    },
+    {
+      "id": "high_12",
+      "label": "pandas DataFrame concat",
+      "category": "HIGH",
+      "confidence": 0.3978,
+      "fired": true
+    },
+    {
+      "id": "high_13",
+      "label": "boto3 S3 upload",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_14",
+      "label": "Celery async task",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_15",
+      "label": "Token expiry datetime",
+      "category": "HIGH",
+      "confidence": 0.7485,
+      "fired": false
+    },
+    {
+      "id": "high_16",
+      "label": "Pillow image resize",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_17",
+      "label": "Django REST list view",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_18",
+      "label": "Async HTTP GET request",
+      "category": "HIGH",
+      "confidence": 0.6448,
+      "fired": false
+    },
+    {
+      "id": "high_19",
+      "label": "Schema validation",
+      "category": "HIGH",
+      "confidence": 1.0,
+      "fired": false
+    },
+    {
+      "id": "high_20",
+      "label": "Parametrized test",
+      "category": "HIGH",
+      "confidence": 0.6661,
+      "fired": false
+    }
+  ]
+}
