@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "experiment": "scenario_e_collapse",
+    "description": "Combined vs. per-function \u03b5 generation; demonstrates \u03b5 collapse",
+    "timestamp": "2026-04-21T17:58:33.567286+00:00"
+  },
+  "results": [
+    {
+      "model": "gpt-4o",
+      "total_tokens": 617,
+      "chunks_detected": 9,
+      "functions": [
+        {
+          "id": "sce_e1",
+          "fn": "register_user",
+          "combined_peak_eps": 0.6908,
+          "combined_mean_eps": 0.0637,
+          "per_fn_peak_eps": 0.9045,
+          "delta_peak": -0.2137,
+          "combined_tokens": 18
+        },
+        {
+          "id": "sce_e2",
+          "fn": "login",
+          "combined_peak_eps": 0.0432,
+          "combined_mean_eps": 0.0017,
+          "per_fn_peak_eps": 0.8908,
+          "delta_peak": -0.8476,
+          "combined_tokens": 29
+        },
+        {
+          "id": "sce_e3",
+          "fn": "verify_token",
+          "combined_peak_eps": 0.5082,
+          "combined_mean_eps": 0.0377,
+          "per_fn_peak_eps": 0.6323,
+          "delta_peak": -0.1241,
+          "combined_tokens": 72
+        },
+        {
+          "id": "sce_e4",
+          "fn": "refresh_token",
+          "combined_peak_eps": 0.43,
+          "combined_mean_eps": 0.0442,
+          "per_fn_peak_eps": 0.8173,
+          "delta_peak": -0.3873,
+          "combined_tokens": 79
+        },
+        {
+          "id": "sce_e5",
+          "fn": "request_password_reset",
+          "combined_peak_eps": 0.613,
+          "combined_mean_eps": 0.0276,
+          "per_fn_peak_eps": 0.9248,
+          "delta_peak": -0.3118,
+          "combined_tokens": 73
+        },
+        {
+          "id": "sce_e6",
+          "fn": "reset_password",
+          "combined_peak_eps": 0.2548,
+          "combined_mean_eps": 0.0076,
+          "per_fn_peak_eps": 0.876,
+          "delta_peak": -0.6212,
+          "combined_tokens": 43
+        }
+      ],
+      "raw_text_preview": "from sqlalchemy.orm import Session\nfrom sqlalchemy.exc import IntegrityError\nfrom passlib.context import CryptContext\nfrom jose import JWTError, jwt\nfrom datetime import datetime, timedelta\nfrom models import User  # Assuming a User model is defined in models.py\n\nSECRET_KEY = 'your-secret-key'\nALGORITHM = 'HS256'\nACCESS_TOKEN_EXPIRE_MINUTES = 60\n\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\n\ndef get_password_hash(password: str) -> str:\n    return pwd_context.hash(password)\n\n"
+    },
+    {
+      "model": "gpt-4o-mini",
+      "total_tokens": 568,
+      "chunks_detected": 6,
+      "functions": [
+        {
+          "id": "sce_e1",
+          "fn": "register_user",
+          "combined_peak_eps": 0.5792,
+          "combined_mean_eps": 0.0444,
+          "per_fn_peak_eps": 0.6271,
+          "delta_peak": -0.0479,
+          "combined_tokens": 72
+        },
+        {
+          "id": "sce_e2",
+          "fn": "login",
+          "combined_peak_eps": 0.82,
+          "combined_mean_eps": 0.045,
+          "per_fn_peak_eps": 0.8723,
+          "delta_peak": -0.0523,
+          "combined_tokens": 92
+        },
+        {
+          "id": "sce_e3",
+          "fn": "verify_token",
+          "combined_peak_eps": 0.6064,
+          "combined_mean_eps": 0.0253,
+          "per_fn_peak_eps": 0.9113,
+          "delta_peak": -0.3049,
+          "combined_tokens": 58
+        },
+        {
+          "id": "sce_e4",
+          "fn": "refresh_token",
+          "combined_peak_eps": 0.4136,
+          "combined_mean_eps": 0.0215,
+          "per_fn_peak_eps": 0.7113,
+          "delta_peak": -0.2977,
+          "combined_tokens": 72
+        },
+        {
+          "id": "sce_e5",
+          "fn": "request_password_reset",
+          "combined_peak_eps": 0.2952,
+          "combined_mean_eps": 0.0101,
+          "per_fn_peak_eps": 0.788,
+          "delta_peak": -0.4928,
+          "combined_tokens": 75
+        },
+        {
+          "id": "sce_e6",
+          "fn": "reset_password",
+          "combined_peak_eps": 0.3936,
+          "combined_mean_eps": 0.0137,
+          "per_fn_peak_eps": 0.7283,
+          "delta_peak": -0.3347,
+          "combined_tokens": 95
+        }
+      ],
+      "raw_text_preview": "from sqlalchemy.orm import Session\nfrom sqlalchemy.exc import IntegrityError\nfrom passlib.context import CryptContext\nimport jwt\nfrom datetime import datetime, timedelta\n\nSECRET_KEY = 'your-secret-key'  # loaded from env\nALGORITHM = \"HS256\"\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\n\nclass UserNotFoundException(Exception):\n    pass\n\nclass InvalidCredentialsException(Exception):\n    pass\n\nclass TokenExpiredException(Exception):\n    pass\n\nclass InvalidTokenException(Exceptio"
+    },
+    {
+      "model": "deepseek-ai/DeepSeek-V3",
+      "total_tokens": 804,
+      "chunks_detected": 6,
+      "functions": [
+        {
+          "id": "sce_e1",
+          "fn": "register_user",
+          "combined_peak_eps": 0.4236,
+          "combined_mean_eps": 0.0337,
+          "per_fn_peak_eps": 0.8643,
+          "delta_peak": -0.4407,
+          "combined_tokens": 94
+        },
+        {
+          "id": "sce_e2",
+          "fn": "login",
+          "combined_peak_eps": 0.5182,
+          "combined_mean_eps": 0.0257,
+          "per_fn_peak_eps": 0.9724,
+          "delta_peak": -0.4542,
+          "combined_tokens": 129
+        },
+        {
+          "id": "sce_e3",
+          "fn": "verify_token",
+          "combined_peak_eps": 0.372,
+          "combined_mean_eps": 0.0144,
+          "per_fn_peak_eps": 0.7346,
+          "delta_peak": -0.3626,
+          "combined_tokens": 51
+        },
+        {
+          "id": "sce_e4",
+          "fn": "refresh_token",
+          "combined_peak_eps": 0.5029,
+          "combined_mean_eps": 0.0122,
+          "per_fn_peak_eps": 0.9566,
+          "delta_peak": -0.4537,
+          "combined_tokens": 71
+        },
+        {
+          "id": "sce_e5",
+          "fn": "request_password_reset",
+          "combined_peak_eps": 0.7639,
+          "combined_mean_eps": 0.0199,
+          "per_fn_peak_eps": 0.7604,
+          "delta_peak": 0.0035,
+          "combined_tokens": 165
+        },
+        {
+          "id": "sce_e6",
+          "fn": "reset_password",
+          "combined_peak_eps": 0.4188,
+          "combined_mean_eps": 0.0179,
+          "per_fn_peak_eps": 0.8783,
+          "delta_peak": -0.4595,
+          "combined_tokens": 218
+        }
+      ],
+      "raw_text_preview": "```python\nimport bcrypt\nimport jwt\nfrom datetime import datetime, timedelta, timezone\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy.exc import IntegrityError\nfrom sqlalchemy import select\nfrom models import User, PasswordResetToken\n\nSECRET_KEY = 'your-secret-key'\nALGORITHM = 'HS256'\n\ndef register_user(session: Session, email: str, password: str):\n    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')\n    user = User(email=email, password_hash=hashed_"
+    }
+  ]
+}

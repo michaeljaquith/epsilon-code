@@ -1,0 +1,2023 @@
+{
+  "meta": {
+    "description": "Epsilon precision/recall analysis",
+    "total_entries": 200,
+    "low_entries": 30,
+    "high_entries": 170,
+    "total_failures": 53
+  },
+  "pr_curve": [
+    {
+      "threshold": 0.0,
+      "precision": 0.265,
+      "recall": 1.0,
+      "f1": 0.419,
+      "tp": 53,
+      "fp": 147,
+      "fn": 0,
+      "tn": 0
+    },
+    {
+      "threshold": 0.05,
+      "precision": 0.268,
+      "recall": 1.0,
+      "f1": 0.422,
+      "tp": 53,
+      "fp": 145,
+      "fn": 0,
+      "tn": 2
+    },
+    {
+      "threshold": 0.1,
+      "precision": 0.27,
+      "recall": 1.0,
+      "f1": 0.426,
+      "tp": 53,
+      "fp": 143,
+      "fn": 0,
+      "tn": 4
+    },
+    {
+      "threshold": 0.15,
+      "precision": 0.27,
+      "recall": 1.0,
+      "f1": 0.426,
+      "tp": 53,
+      "fp": 143,
+      "fn": 0,
+      "tn": 4
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.27,
+      "recall": 1.0,
+      "f1": 0.426,
+      "tp": 53,
+      "fp": 143,
+      "fn": 0,
+      "tn": 4
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.27,
+      "recall": 1.0,
+      "f1": 0.426,
+      "tp": 53,
+      "fp": 143,
+      "fn": 0,
+      "tn": 4
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.272,
+      "recall": 1.0,
+      "f1": 0.427,
+      "tp": 53,
+      "fp": 142,
+      "fn": 0,
+      "tn": 5
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.275,
+      "recall": 1.0,
+      "f1": 0.431,
+      "tp": 53,
+      "fp": 140,
+      "fn": 0,
+      "tn": 7
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.276,
+      "recall": 1.0,
+      "f1": 0.433,
+      "tp": 53,
+      "fp": 139,
+      "fn": 0,
+      "tn": 8
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.272,
+      "recall": 0.943,
+      "f1": 0.422,
+      "tp": 50,
+      "fp": 134,
+      "fn": 3,
+      "tn": 13
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.277,
+      "recall": 0.925,
+      "f1": 0.426,
+      "tp": 49,
+      "fp": 128,
+      "fn": 4,
+      "tn": 19
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.281,
+      "recall": 0.906,
+      "f1": 0.429,
+      "tp": 48,
+      "fp": 123,
+      "fn": 5,
+      "tn": 24
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.286,
+      "recall": 0.906,
+      "f1": 0.434,
+      "tp": 48,
+      "fp": 120,
+      "fn": 5,
+      "tn": 27
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.293,
+      "recall": 0.868,
+      "f1": 0.438,
+      "tp": 46,
+      "fp": 111,
+      "fn": 7,
+      "tn": 36
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.282,
+      "recall": 0.792,
+      "f1": 0.416,
+      "tp": 42,
+      "fp": 107,
+      "fn": 11,
+      "tn": 40
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.296,
+      "recall": 0.755,
+      "f1": 0.426,
+      "tp": 40,
+      "fp": 95,
+      "fn": 13,
+      "tn": 52
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.314,
+      "recall": 0.717,
+      "f1": 0.437,
+      "tp": 38,
+      "fp": 83,
+      "fn": 15,
+      "tn": 64
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.321,
+      "recall": 0.679,
+      "f1": 0.436,
+      "tp": 36,
+      "fp": 76,
+      "fn": 17,
+      "tn": 71
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.311,
+      "recall": 0.604,
+      "f1": 0.41,
+      "tp": 32,
+      "fp": 71,
+      "fn": 21,
+      "tn": 76
+    },
+    {
+      "threshold": 0.95,
+      "precision": 0.309,
+      "recall": 0.547,
+      "f1": 0.395,
+      "tp": 29,
+      "fp": 65,
+      "fn": 24,
+      "tn": 82
+    },
+    {
+      "threshold": 1.0,
+      "precision": 0.329,
+      "recall": 0.453,
+      "f1": 0.381,
+      "tp": 24,
+      "fp": 49,
+      "fn": 29,
+      "tn": 98
+    }
+  ],
+  "entries": [
+    {
+      "id": "low_01",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_02",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.256,
+      "cascaded_status": "COMPLETE",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_03",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.6883,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_04",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.9556,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_05",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.8156,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_06",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.0798,
+      "cascaded_status": "COMPLETE",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_07",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.0367,
+      "cascaded_status": "COMPLETE",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_08",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.782,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_09",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.8523,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_10",
+      "model": "gpt-4o",
+      "source": "LOW",
+      "cascaded_score": 0.4826,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_01",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.7765,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_02",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.4342,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_03",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.3723,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_04",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.6412,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_05",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.9998,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_06",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.0981,
+      "cascaded_status": "COMPLETE",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_07",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.0,
+      "cascaded_status": "COMPLETE",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_08",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.6208,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_09",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.415,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_10",
+      "model": "gpt-4o-mini",
+      "source": "LOW",
+      "cascaded_score": 0.4644,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_01",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.5413,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_02",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.6713,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_03",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.7021,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_04",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.7555,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_05",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.9619,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_06",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.9208,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_07",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.3032,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_08",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.5632,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_09",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.9844,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "low_10",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "LOW",
+      "cascaded_score": 0.5858,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": ""
+    },
+    {
+      "id": "login_reset_password",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9934,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "items_delete_item",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.5024,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises the appropriate HTTP exceptions and handles "
+    },
+    {
+      "id": "login_login_access_token",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.8841,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly authenticates the user and handles both incorrect c"
+    },
+    {
+      "id": "login_recover_password_html_content",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises a 404 error if the user is not found and gen"
+    },
+    {
+      "id": "items_update_item",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.6086,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The generated output contains markdown fences, which is format contamination."
+    },
+    {
+      "id": "items_read_items",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `total_items` incorrectly as it retrieves a count from a"
+    },
+    {
+      "id": "items_create_item",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.632,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification for creating a n"
+    },
+    {
+      "id": "users_read_users",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly constructs a query to retrieve users and counts the"
+    },
+    {
+      "id": "users_delete_user_me",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9003,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly raises an exception for superusers and deletes the "
+    },
+    {
+      "id": "login_recover_password",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the specification by sending a password rec"
+    },
+    {
+      "id": "users_update_password_me",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles password verification and updating accordin"
+    },
+    {
+      "id": "users_update_user_me",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles the user update logic as specified, includi"
+    },
+    {
+      "id": "users_read_user_by_id",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles user retrieval and permission checks accord"
+    },
+    {
+      "id": "users_register_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException if the email is already reg"
+    },
+    {
+      "id": "items_read_item",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4723,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises HTTP exceptions for not found and permission"
+    },
+    {
+      "id": "users_create_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an exception for an existing email and handl"
+    },
+    {
+      "id": "users_update_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the specification for updating a user and h"
+    },
+    {
+      "id": "security_create_access_token",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4199,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly creates a JWT access token as specified, with appro"
+    },
+    {
+      "id": "security_verify_password",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation does not handle the case where `password_hash.verify_and_upda"
+    },
+    {
+      "id": "deps_get_db",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.7581,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly uses a context manager to yield a SQLModel Session,"
+    },
+    {
+      "id": "crud_update_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly updates the user object and handles password hashin"
+    },
+    {
+      "id": "rutils_test_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an error if emails are not enabled and sends"
+    },
+    {
+      "id": "deps_get_current_active_superuser",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.6258,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException with a 403 status code if t"
+    },
+    {
+      "id": "users_delete_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles user deletion according to the specificatio"
+    },
+    {
+      "id": "crud_create_user",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The generated output contains markdown fences, which is format contamination."
+    },
+    {
+      "id": "utils_send_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and uses the app"
+    },
+    {
+      "id": "crud_authenticate",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9595,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation does not handle the case where `verify_password` returns an u"
+    },
+    {
+      "id": "crud_get_user_by_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.6691,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The generated implementation contains format contamination with markdown fences,"
+    },
+    {
+      "id": "utils_generate_test_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `jinja2.Template(\"test_email.html\")` is incorrect as it should read t"
+    },
+    {
+      "id": "crud_create_item",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4562,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly uses `item_in.dict()` to unpack the attributes of `"
+    },
+    {
+      "id": "utils_generate_new_account_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The generated implementation uses a raw string for the HTML content instead of r"
+    },
+    {
+      "id": "utils_generate_password_reset_token",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9258,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly generates a JWT token with the specified payload an"
+    },
+    {
+      "id": "utils_render_email_template",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9828,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly reads the template file and renders it with the pro"
+    },
+    {
+      "id": "utils_verify_password_reset_token",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.327,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly handles the decoding of the JWT and returns the sub"
+    },
+    {
+      "id": "items_read_items",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "Using `one()` may lead to an exception if no results are found, and the implemen"
+    },
+    {
+      "id": "items_delete_item",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7612,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly raises HTTP exceptions for not found and permission"
+    },
+    {
+      "id": "items_read_item",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6389,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises a 403 error for insufficient permissions, an"
+    },
+    {
+      "id": "login_login_access_token",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6327,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification for generating a"
+    },
+    {
+      "id": "utils_generate_reset_password_email",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `jinja2.Template` with a string literal for the template source is in"
+    },
+    {
+      "id": "login_recover_password",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.9905,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the specification by sending a password rec"
+    },
+    {
+      "id": "items_update_item",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7372,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation uses `item_in.dict(exclude_unset=True)`, which is incorrect a"
+    },
+    {
+      "id": "users_read_users",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly retrieves users and counts while adhering to the fu"
+    },
+    {
+      "id": "login_recover_password_html_content",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.941,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly retrieves the user by email and raises a 404 error "
+    },
+    {
+      "id": "users_create_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7945,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "users_update_password_me",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.903,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly raises HTTP exceptions for invalid password conditi"
+    },
+    {
+      "id": "users_delete_user_me",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.5355,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException for superusers and handles "
+    },
+    {
+      "id": "login_reset_password",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly verifies the user and raises an appropriate excepti"
+    },
+    {
+      "id": "users_read_user_by_id",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.9896,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises a 403 error for non-superusers attempting to"
+    },
+    {
+      "id": "users_delete_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles user"
+    },
+    {
+      "id": "rutils_test_email",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException for unauthorized access and"
+    },
+    {
+      "id": "users_update_user_me",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.9517,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "deps_get_db",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6319,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly yields a SQLModel Session within a context manager,"
+    },
+    {
+      "id": "users_register_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "deps_get_current_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6659,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly handles the decoding of the JWT, user lookup, and r"
+    },
+    {
+      "id": "security_create_access_token",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.4072,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "deps_get_current_active_superuser",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6462,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The implementation raises a 403 error for inactive users, but the spec requires "
+    },
+    {
+      "id": "users_update_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.8659,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The use of `user_in.dict(exclude_unset=True)` suggests the code is using Pydanti"
+    },
+    {
+      "id": "utils_render_email_template",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7825,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly reads the template file and renders it with the pro"
+    },
+    {
+      "id": "utils_send_email",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `.body` to access the response content may be incorrect; the alternat"
+    },
+    {
+      "id": "utils_generate_new_account_email",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6329,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly constructs the email subject and content as specifi"
+    },
+    {
+      "id": "crud_update_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.8939,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The use of `user_in.dict()` is incorrect as it relies on a deprecated method; it"
+    },
+    {
+      "id": "utils_generate_reset_password_email",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7376,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly constructs the subject and email content as specifi"
+    },
+    {
+      "id": "utils_verify_password_reset_token",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6843,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation includes a bare `except` clause which silently swallows all e"
+    },
+    {
+      "id": "utils_generate_password_reset_token",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.8772,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "crud_authenticate",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7459,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation uses `verify_password` in a way that suggests it may return a"
+    },
+    {
+      "id": "items_update_item",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7421,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles exce"
+    },
+    {
+      "id": "items_read_item",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9659,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises HTTP exceptions for not found and permission"
+    },
+    {
+      "id": "items_delete_item",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8399,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly handles the deletion of an item, including appropri"
+    },
+    {
+      "id": "crud_create_user",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7227,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly uses the unpacking operator with the UserCreate dic"
+    },
+    {
+      "id": "items_create_item",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7581,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and uses valid p"
+    },
+    {
+      "id": "items_read_items",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `session.exec()` which may not be correct depending on t"
+    },
+    {
+      "id": "login_recover_password",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "login_reset_password",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation includes a bare `except: pass` which silently swallows all er"
+    },
+    {
+      "id": "users_create_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly checks for existing emails and raises an HTTPExcept"
+    },
+    {
+      "id": "users_read_user_by_id",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9679,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles user access control and raises appropriate "
+    },
+    {
+      "id": "users_update_user_me",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "users_delete_user_me",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.988,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException for superusers and handles "
+    },
+    {
+      "id": "users_register_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The use of `user_in.model_dump()` is correct in Pydantic v2 for creating a user "
+    },
+    {
+      "id": "users_update_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9595,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles user"
+    },
+    {
+      "id": "users_update_password_me",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles pass"
+    },
+    {
+      "id": "users_read_users",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly constructs a SQL statement to retrieve users and co"
+    },
+    {
+      "id": "users_delete_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTP exception for attempting to delete o"
+    },
+    {
+      "id": "rutils_test_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "deps_get_current_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.4352,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly handles JWT decoding, user lookup, and raises appro"
+    },
+    {
+      "id": "deps_get_current_active_superuser",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.5574,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly raises an HTTPException with a 403 status code if t"
+    },
+    {
+      "id": "security_create_access_token",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7566,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly creates a JWT access token as specified, with no is"
+    },
+    {
+      "id": "security_verify_password",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7574,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation does not return a tuple as specified, which should include bo"
+    },
+    {
+      "id": "deps_get_db",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.6519,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly yields a SQLModel Session within a context manager,"
+    },
+    {
+      "id": "crud_get_user_by_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.6221,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The chosen token 'statement' is appropriate for defining the SQL query in the co"
+    },
+    {
+      "id": "crud_create_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification for creating a u"
+    },
+    {
+      "id": "security_get_password_hash",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.4604,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The implementation does not include the necessary import or context for `passwor"
+    },
+    {
+      "id": "crud_authenticate",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification for user authent"
+    },
+    {
+      "id": "crud_update_user",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The method `sqlmodel_update` is not a standard method for updating ORM objects a"
+    },
+    {
+      "id": "utils_generate_test_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation does not render the `test_email.html` template as specified, "
+    },
+    {
+      "id": "utils_render_email_template",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8083,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly reads and renders the email template using Jinja2 w"
+    },
+    {
+      "id": "utils_send_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and uses the app"
+    },
+    {
+      "id": "crud_create_item",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7301,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly creates an Item ORM object and follows the function"
+    },
+    {
+      "id": "utils_verify_password_reset_token",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly decodes the JWT and returns the subject (email) or "
+    },
+    {
+      "id": "utils_generate_new_account_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.999,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly builds the email content and subject as specified, "
+    },
+    {
+      "id": "utils_generate_password_reset_token",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9128,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'expire' is correct and aligns with the function specification "
+    },
+    {
+      "id": "utils_generate_reset_password_email",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9586,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly builds the password reset email as specified, with "
+    },
+    {
+      "id": "high_03",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly retrieves active users from the database as specifi"
+    },
+    {
+      "id": "high_02",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9185,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation uses the deprecated `openai.ChatCompletion.create` method ins"
+    },
+    {
+      "id": "high_04",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.8282,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly fetches weather data from the API and handles error"
+    },
+    {
+      "id": "high_05",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation incorrectly uses `hmac.compare_digest` to compare the stored "
+    },
+    {
+      "id": "high_09",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4975,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly handles the retrieval of a cached value from Redis "
+    },
+    {
+      "id": "high_11",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.7281,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly imports the necessary Pydantic class and defines th"
+    },
+    {
+      "id": "high_08",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.907,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The function returns None for non-200 responses instead of raising an exception,"
+    },
+    {
+      "id": "high_12",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.7374,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly concatenates and deduplicates the provided datafram"
+    },
+    {
+      "id": "high_06",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4137,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "high_10",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The code contains a bare `except` clause that silently swallows all errors, whic"
+    },
+    {
+      "id": "high_13",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.8888,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly handles file uploads to S3 and manages exceptions a"
+    },
+    {
+      "id": "high_16",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly uses the input_path parameter to open an image file"
+    },
+    {
+      "id": "high_14",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.9588,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The bare `except: pass` silently swallows the `User.DoesNotExist` exception, whi"
+    },
+    {
+      "id": "high_18",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.4342,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly follows the specification for fetching JSON data us"
+    },
+    {
+      "id": "high_17",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.8163,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly follows the specification for a Django REST framewo"
+    },
+    {
+      "id": "high_19",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly validates and deserializes registration data accord"
+    },
+    {
+      "id": "high_20",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly defines the conversion functions and their correspo"
+    },
+    {
+      "id": "high_15",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.5471,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "sce_e2",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly generates a JWT token with a 1-hour expiry and rais"
+    },
+    {
+      "id": "sce_e6",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles user retrieval and password reset according"
+    },
+    {
+      "id": "sce_e3",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 0.892,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly handles the decoding and validation of a JWT access"
+    },
+    {
+      "id": "sce_e5",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "sce_e1",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles user registration, including password hashi"
+    },
+    {
+      "id": "sce_e4",
+      "model": "gpt-4o",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly validates the JWT and handles exceptions as specifi"
+    },
+    {
+      "id": "high_01",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.8524,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'status' is correct and aligns with the expected output format "
+    },
+    {
+      "id": "high_02",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.75,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation uses the deprecated `openai.ChatCompletion.create` method ins"
+    },
+    {
+      "id": "high_06",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.67,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "high_05",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.9259,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The comparison `pwd_hash == binascii.hexlify(expected_hash).decode()` may lead t"
+    },
+    {
+      "id": "high_09",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.4752,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly retrieves a value from Redis and handles the case w"
+    },
+    {
+      "id": "high_14",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7372,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'from' is correct and appropriate for the context of the email "
+    },
+    {
+      "id": "high_10",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.6958,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The bare `except` clause silently swallows all errors, which is problematic as t"
+    },
+    {
+      "id": "high_15",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.4139,
+      "cascaded_status": "FLAGGED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "high_13",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.504,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The chosen token '(local' correctly matches the function's parameters and contex"
+    },
+    {
+      "id": "high_12",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7127,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token correctly matches the function signature and context for concat"
+    },
+    {
+      "id": "high_20",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly defines the conversion functions and their correspo"
+    },
+    {
+      "id": "sce_e1",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.7493,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The use of bcrypt for password hashing is appropriate and aligns with the functi"
+    },
+    {
+      "id": "high_19",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The chosen token 'data' is correct and consistent with the context of retrieving"
+    },
+    {
+      "id": "login_login_access_token",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7259,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification for OAuth2 token"
+    },
+    {
+      "id": "sce_e4",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.993,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `datetime.utcnow()`, which is deprecated in Python 3.12+"
+    },
+    {
+      "id": "sce_e5",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `datetime.utcnow()`, which is deprecated in Python 3.12+"
+    },
+    {
+      "id": "high_16",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.763,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'width' is correct and necessary for the logic of resizing the "
+    },
+    {
+      "id": "sce_e3",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The check for token expiration uses `datetime.utcnow().timestamp()`, which is de"
+    },
+    {
+      "id": "sce_e2",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+, and it should be r"
+    },
+    {
+      "id": "sce_e6",
+      "model": "gpt-4o-mini",
+      "source": "HIGH",
+      "cascaded_score": 0.9783,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `datetime.utcnow()`, which is deprecated in Python 3.12 "
+    },
+    {
+      "id": "high_03",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.823,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly defines a function to retrieve active users from th"
+    },
+    {
+      "id": "high_01",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of 'confirm' in the PaymentIntent.create method is incorrect as it shoul"
+    },
+    {
+      "id": "high_04",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8059,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'return' is correct as it properly returns the JSON response fr"
+    },
+    {
+      "id": "high_02",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses the deprecated `openai.ChatCompletion.create` method ins"
+    },
+    {
+      "id": "high_05",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly uses bcrypt for hashing and verifying passwords acc"
+    },
+    {
+      "id": "high_08",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7715,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly retrieves and returns a JSON response from the spec"
+    },
+    {
+      "id": "high_07",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly retrieves the current UTC time using the appropriat"
+    },
+    {
+      "id": "high_10",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8411,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The implementation lacks error handling for database operations, which should pr"
+    },
+    {
+      "id": "high_09",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7157,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The chosen token 'return' is correct and aligns with the function specification "
+    },
+    {
+      "id": "high_13",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8532,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The generated implementation contains format contamination with markdown fences,"
+    },
+    {
+      "id": "high_14",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and uses appropr"
+    },
+    {
+      "id": "high_12",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly checks if the input list is empty before attempting"
+    },
+    {
+      "id": "high_11",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.9598,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly uses the Pydantic v2 method `.model_dump()` to conv"
+    },
+    {
+      "id": "high_17",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.7772,
+      "cascaded_status": "PAUSED",
+      "fail": false,
+      "note": "The implementation correctly defines a Django REST framework view with appropria"
+    },
+    {
+      "id": "high_18",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.5066,
+      "cascaded_status": "FLAGGED",
+      "fail": false,
+      "note": "The implementation correctly uses the httpx library to fetch JSON data asynchron"
+    },
+    {
+      "id": "high_20",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly tests the conversion functions with appropriate par"
+    },
+    {
+      "id": "high_15",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.8013,
+      "cascaded_status": "PAUSED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "high_19",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 0.986,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation contains a bare `except: pass` which silently swallows all er"
+    },
+    {
+      "id": "high_16",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly resizes the image based on the specified maximum wi"
+    },
+    {
+      "id": "sce_e1",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of a bare `except` statement silently swallows all exceptions, which is "
+    },
+    {
+      "id": "sce_e3",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly handles JWT decoding and validation according to th"
+    },
+    {
+      "id": "sce_e6",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": false,
+      "note": "The implementation correctly follows the function specification and handles the "
+    },
+    {
+      "id": "sce_e4",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "sce_e5",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The use of `datetime.utcnow()` is deprecated in Python 3.12+ and should be repla"
+    },
+    {
+      "id": "sce_e2",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "source": "HIGH",
+      "cascaded_score": 1.0,
+      "cascaded_status": "ABORTED",
+      "fail": true,
+      "note": "The implementation uses `datetime.utcnow()`, which is deprecated in Python 3.12 "
+    }
+  ]
+}

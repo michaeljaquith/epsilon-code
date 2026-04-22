@@ -72,38 +72,62 @@ Five calibrated scenarios demonstrating different failure classes:
 ## Benchmark
 
 ```bash
-# ε false positive / detection rate benchmark (20 prompts)
-python benchmark/benchmark_calibration.py
+# 30-prompt benchmark (10 LOW + 20 HIGH) across models
+python benchmark/benchmark_calibration.py --model gpt-4o
+python benchmark/benchmark_calibration.py --model gpt-4o-mini
+python benchmark/benchmark_calibration.py --model gpt-4-turbo
 
-# UQLM comparison (requires: pip install uqlm langchain-openai)
+# UQLM comparison baseline (requires: pip install uqlm langchain-openai)
 python benchmark/benchmark_uqlm.py --skip-epsilon
 
-# Domain threshold calibration (runs Scenario E repeatedly)
-python benchmark/calibrate_thresholds.py --runs 12
+# Scenario A–E qualitative runs
+python benchmark/benchmark_scenarios.py --model gpt-4o
+
+# Scenario E combined-prompt collapse experiment
+python benchmark/benchmark_scenario_e_collapse.py
+
+# exec()-based ground truth verification for LOW prompts
+python benchmark/ground_truth_low.py
+
+# Precision/recall curve analysis (combines LOW + HIGH ground truth)
+python benchmark/analyze_epsilon_pr.py
+
+# Two-stage review loop (2A: no context, 2B: with learned FP patterns)
+python benchmark/review_loop.py
 ```
+
+Results from the paper are in `benchmark/results/`.
 
 ## How it works
 
-1. **Token-level ε**: normalized Shannon entropy over top-5 logprob alternatives at each token position
-2. **AST filtering**: function names, parameter names, and local variable names excluded (cosmetic naming uncertainty, not consequential)
-3. **Max aggregation**: file/function ε = max token ε above noise floor (0.30) — bounded, interpretable, doesn't explode with length
-4. **Adaptive threshold**: K-NN neighborhood in embedding space; MAD domain after ~13 similar runs, conformal after ~75
+1. **Token-level ε**: normalized Shannon entropy over top-5 logprob alternatives at each token position — `ε_t = -(1/log k) Σ p_i log p_i`
+2. **AST filtering**: function names, parameter names, and local variable names excluded (Type 1 cosmetic uncertainty); only API selectors, import targets, and keyword arguments retained
+3. **Max aggregation**: file/function ε = max token ε above floor (0.30) — localizes uncertainty to a specific actionable token
+4. **Two-stage system**: ε filter at recall=1.00 (catches everything) + parallel LLM reviewer (clears false positives, precision → ~100%)
 
-See the paper for full details.
+See the paper for full details including the three-type uncertainty taxonomy and review loop evaluation.
 
 ## Repository structure
 
 ```
-epsilon/                Core library
+epsilon/                    Core library
   __init__.py
-  core.py               EpsilonWrapper, EpsilonResult, TokenEpsilon
-  renderer.py           Terminal output with rich
-  logger.py             Persistent JSONL session log + K-NN retrieval
+  core.py                   EpsilonWrapper, EpsilonResult, TokenEpsilon
+  renderer.py               Terminal output with rich
+  logger.py                 Persistent JSONL session log
 
-demos/                  Calibrated scenario scripts (A–E)
-benchmark/              Calibration and comparison scripts
+demos/                      Calibrated scenario scripts (A–E)
+benchmark/                  Benchmark and analysis scripts
+  benchmark_calibration.py  30-prompt calibration benchmark
+  benchmark_uqlm.py         UQLM comparison baseline
+  benchmark_scenarios.py    Qualitative scenario runner (A–E)
+  benchmark_scenario_e_collapse.py  Combined vs per-function generation
+  ground_truth_low.py       exec()-based LOW ground truth verification
+  analyze_epsilon_pr.py     Precision/recall curve analysis
+  review_loop.py            Two-stage filter + LLM review loop
+  results/                  Pre-computed benchmark outputs
 
-paper/                  LaTeX source (arXiv submission)
+paper/                      LaTeX source (arXiv submission)
 ```
 
 ## License

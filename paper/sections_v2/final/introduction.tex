@@ -1,0 +1,69 @@
+\section{Introduction}
+\label{sec:introduction}
+
+A model asked to charge a credit card might emit
+\texttt{stripe.Charge.create(...)} --- deprecated since 2019 --- or
+\texttt{stripe.PaymentIntent.create(...)}, the current API. Both arrive in
+the developer's editor with the same syntactic fluency, the same confident
+indentation, and no visible marker distinguishing a well-chosen call from
+one the model guessed at. At the method-selector token, the two choices
+split the probability mass near 50/50 ($0.52$ vs.\ $0.47$); the output
+exposes none of this. Failures of AI code generation cluster at exactly
+these points: version-split APIs, renamed SDK methods, signature changes
+between library releases. The model is uncertain; the output is not.
+
+\paragraph{Intra- versus inter-generational uncertainty.}
+Existing uncertainty-quantification methods for LLMs are overwhelmingly
+\emph{inter-generational}: they sample the same prompt multiple times and
+measure disagreement across completions~\cite{kuhn2023semantic,uqlm2024}.
+This works when the model's uncertainty surfaces as instability across
+re-rolls --- factual questions, open-ended reasoning. Code is not such a
+task. A model with a $0.52$ prior on the deprecated \texttt{Charge} API
+samples that branch nearly every time; once the early tokens commit, the
+rest of the function is forced by context. The uncertainty exists, but it
+lives \emph{inside a single generation}, in the token distribution at each
+decoding step, not \emph{across} generations. We call this the
+\emph{intra- versus inter-generational} distinction. It is the conceptual
+foundation of this paper: UQLM, the closest published tool for LLM
+uncertainty quantification, achieves $5\%$ detection on our benchmark
+where \eps achieves $85\%$ (\S\ref{sec:comparison}).
+
+\paragraph{\eps: a recall-maximizing filter.}
+We introduce \eps (epsilon), a per-token normalized Shannon entropy over
+the top-$k$ log-probabilities returned during generation. After AST-based
+filtering to keep only semantically meaningful tokens (attribute accesses,
+keyword arguments, import targets --- not whitespace, comments, or
+cosmetic identifiers), we aggregate via max-pooling to obtain a single
+score per function. \eps is not a detector --- it identifies where the
+model was uncertain at decoding time. At a threshold of $\eps \ge 0.30$
+it catches $100\%$ of true failures on our benchmark, at the cost of
+roughly $73\%$ false alarms.
+
+\paragraph{The two-stage system.}
+A $27\%$-precision filter is not meant to be used in isolation. Stage 2
+is a parallel LLM review loop: every flagged entry is dispatched, in
+parallel, to a reviewer model that returns \textsc{cleared} or
+\textsc{confirmed}. At current API prices this costs fractions of a cent
+per entry and completes in seconds. \eps has perfect recall but poor
+precision; the reviewer has good precision but would be too expensive per
+line. Filter plus reviewer gives a system with near-$100\%$ end-to-end
+precision while missing nothing the filter catches. AI-assisted developers
+now write code several times faster than they can review it; a parallel
+review system scales with generation speed and moves review off the
+developer's critical path.
+
+\paragraph{Contributions.}
+\begin{enumerate}[noitemsep]
+    \item The intra/inter-generational distinction, with empirical
+    confirmation: $5\%$ vs.\ $85\%$ detection for UQLM vs.\ \eps on the
+    same benchmark.
+    \item \eps: an AST-filtered, max-aggregated token-level entropy score,
+    with a three-type uncertainty taxonomy (cosmetic, consequential,
+    implementation-approach) that motivates the filter design.
+    \item A two-stage filter-plus-review architecture, with a context-%
+    accumulation variant, evaluated on 201 entries across three models:
+    near-$100\%$ end-to-end precision at $100\%$ recall.
+\end{enumerate}
+
+Implementation and benchmark are at
+\url{https://github.com/michaeljaquith/epsilon-code}.
