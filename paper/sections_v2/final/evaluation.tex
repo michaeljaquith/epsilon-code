@@ -17,13 +17,14 @@ are in the training data; neither is definitively preferred.
 
 \paragraph{B --- Confident wrongness (OpenAI SDK).}
 \textit{``Call GPT-4 and return the response text.''} $\eps = 0.551$,
-\textsc{paused}. The model generated v0
+\textsc{flagged}. The model generated v0
 (\texttt{openai.ChatCompletion.create(\ldots)}) confidently; v0 raises
 \texttt{AttributeError} on SDK $\ge 1.0$. \eps fired not on the API
 call --- the model was certain --- but on surrounding parameter
-design. \textsc{paused} prompts the developer to examine the function,
-encountering the deprecated call. This is indirect detection: \eps
-flagged adjacent uncertainty, not the failing token itself.
+design. \textsc{flagged} routes the function to the review loop; the reviewer,
+examining the full function, surfaces the deprecated call. This is
+indirect detection: \eps flagged adjacent uncertainty, not the failing
+token itself.
 
 \paragraph{C --- Syntax split (SQLAlchemy).}
 \textit{``Query all active users.''} $\eps = 0.435$, \textsc{flagged}.
@@ -184,15 +185,15 @@ Tier monotonicity is modest ($27\%/29\%/31\%$); tiers are urgency
 signals, not calibrated probabilities. The useful binary boundary is
 \textsc{complete} vs.\ \textsc{flagged+}.
 
-\subsection{Review loop: 2A vs.\ 2B}
+\subsection{Review loop: context-free vs.\ context-primed reviewer}
 \label{subsec:review-loop}
 
 Evaluated on 201 entries (production FastAPI codebase plus scenarios
 A--E, three models). Every \textsc{flagged+} entry is sent in
 parallel to a GPT-4o reviewer returning \textsc{cleared}/\textsc{%
 confirmed}; a consolidation pass processes remaining suspects.
-\textbf{2A} uses no reviewer context; \textbf{2B} injects model-%
-specific learned FP patterns from a prior clean run (injecting suspect
+The \textbf{context-free} variant uses no reviewer context; the \textbf{context-primed} variant injects model-%
+specific learned false-positive patterns from a prior clean run (injecting suspect
 patterns caused over-flagging in pilots).
 
 \begin{table}[h]
@@ -200,7 +201,7 @@ patterns caused over-flagging in pilots).
 \small
 \begin{tabular}{lrr}
 \toprule
-Metric & 2A (no context) & 2B (with FP context) \\
+Metric & Context-free & Context-primed \\
 \midrule
 Cleared by reviewer        & $107/201$ ($53.2\%$) & $138/201$ ($68.7\%$) \\
 Forwarded to consolidation & $89$                 & $57$ \\
@@ -209,7 +210,7 @@ Late false positives       & $4$                  & $0$ \\
 \bottomrule
 \end{tabular}
 \caption{``Late false positive'' = an entry marked \textsc{confirmed}
-that was in fact correct on manual inspection. 2B is the preferred
+that was in fact correct on manual inspection. The context-primed variant is the preferred
 production configuration.}
 \label{tab:review}
 \end{table}
@@ -217,25 +218,18 @@ production configuration.}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig7_review_loop.pdf}
-\caption{Injecting learned FP patterns into the reviewer shifts
-$31$ additional entries from consolidation to cleared and eliminates
-late false positives, at the cost of suppressing some true failures
-the 2A reviewer forwarded.}
+\caption{Injecting learned FP patterns into the reviewer (context-primed
+vs.\ context-free) shifts $31$ additional entries from consolidation to
+cleared and eliminates late false positives, at the cost of suppressing
+some true failures the context-free reviewer forwarded.}
 \label{fig:review-loop}
 \end{figure}
 
 End-to-end failure rates: GPT-4o-mini $40\%$, GPT-4o $29\%$, DeepSeek
 V3 $26\%$. Because stage-1 recall is $100\%$, end-to-end precision is
 determined entirely by the reviewer's precision on the \textsc{flagged+}
-set. 2B's zero late-FP result rests on $n=57$ confirmed entries and
+set. The context-primed variant's zero late-FP result rests on $n=57$ confirmed entries and
 needs a larger validation study. The stage-1 recall guarantee applies
 to entries that reach the reviewer; entries the reviewer clears were
 not independently verified.
 
-\subsection{Ground-truth disclosure}
-\label{subsec:gt-disclosure}
-
-LOW ground truth is \texttt{exec()}-verified; HIGH is LLM-judged via
-GPT-4o. This includes a circular case where GPT-4o-mini output is
-reviewed by a larger model in the same family. We disclose rather
-than overclaim human verification we did not perform.

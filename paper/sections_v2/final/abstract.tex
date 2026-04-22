@@ -14,17 +14,16 @@ designed as a \emph{recall-maximizing filter}, not a detector. On a
 30-prompt calibration benchmark across GPT-4o, GPT-4o-mini, and GPT-4-turbo,
 \eps at the \textsc{flagged} threshold ($\eps \ge 0.30$) achieves recall
 $=1.00$ on true failures with precision $=0.272$. The black-box multi-sample
-baseline UQLM achieves $5\%$ HIGH detection at $0\%$ LOW FP, versus \eps's $85\%$ HIGH detection at $50\%$ LOW FP on GPT-4o;
+baseline UQLM detects $5\%$ of version-split API failures (with $0\%$ false positives on simple logic prompts), versus \eps's $85\%$ detection at $50\%$ false-positive rate on GPT-4o;
 a \texttt{min\_logprob} baseline achieves $45$--$55\%$ where \eps achieves
 $70$--$85\%$.
 
 The low stage-1 precision is the design. We pair the filter with a parallel
 LLM review loop that reclassifies each flagged entry as \textsc{cleared} or
 \textsc{confirmed}. On 201 production and scenario entries across three
-models, the two-stage system lifts reviewer precision above $94\%$ (Wilson
-lower bound; $n=57$, zero late false positives in the 2B configuration). A
-context-accumulated variant, which injects model-specific learned false-%
-positive patterns into the reviewer, clears $68.7\%$ of flagged entries
-with zero late false positives. The contribution is the system: a filter
+models, a variant that injects model-specific learned false-positive
+patterns into the reviewer clears $68.7\%$ of flagged entries with zero
+late false positives, lifting end-to-end precision above $94\%$ (Wilson
+lower bound, $n=57$). The contribution is the system: a filter
 that misses nothing, paired with a reviewer that keeps up with machine-%
 speed code generation.

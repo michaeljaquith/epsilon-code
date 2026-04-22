@@ -28,10 +28,13 @@ correct code. AST filtering does not remove it; the $\sim 50\%$ LOW
 FP is predominantly Type 3 and unlikely to shrink without sacrificing
 recall.
 
-\paragraph{LLM-judged ground truth.} HIGH ground truth comes from the
-LLM review loop, not human verification. Circularity exists where the
-judged model shares a family with the judge (GPT-4o-mini judged by
-GPT-4o); we state it rather than hide it.
+\paragraph{LLM-judged ground truth.}\label{subsec:gt-disclosure}
+LOW ground truth is \texttt{exec()}-verified against assertions covering
+return type, edge cases, and correctness. HIGH ground truth is LLM-judged
+via GPT-4o. Circularity exists where the evaluated model shares a family
+with the judge (GPT-4o-mini judged by GPT-4o); results for that model
+should be read with that caveat. We disclose rather than overclaim human
+verification we did not perform.
 
 \paragraph{Hyperparameters.} The cascaded tier algorithm (six checks,
 three thresholds) was calibrated on GPT-4o; other models inherit
@@ -50,9 +53,10 @@ completed in seconds at fractions of a cent per entry.
 \subsection{Context learning as a microcosm}
 \label{subsec:context}
 
-Configuration 2B injects learned FP patterns into the reviewer's
-context on subsequent runs: clearance rose $53.2\% \to 68.7\%$, late
-FPs fell $4 \to 0$. This is in-context improvement on a fixed model;
+Injecting learned false-positive patterns into the reviewer's context
+(the configuration evaluated in \S\ref{subsec:review-loop}) raised
+clearance from $53.2\%$ to $68.7\%$, and late false positives fell from
+$4$ to $0$. This is in-context improvement on a fixed model;
 training-time improvement would be expected to compound with it.
 
 \subsection{Future work}

@@ -6,10 +6,10 @@
 
 For each generated token $t$, the API returns top-$k$ candidates with
 log-probabilities $\ell_1, \dots, \ell_k$. Let
-$p_i = \exp(\ell_i) / \sum_j \exp(\ell_j)$ be the renormalized
+$p_j = \exp(\ell_j) / \sum_j \exp(\ell_j)$ be the renormalized
 distribution. Define
 \begin{equation}
-    \eps_t \;=\; -\frac{1}{\log k} \sum_{i=1}^{k} p_i \log p_i \;\in\; [0,1].
+    \eps_t \;=\; -\frac{1}{\log k} \sum_{j=1}^{k} p_j \log p_j \;\in\; [0,1].
     \label{eq:eps}
 \end{equation}
 Normalization by $\log k$ maps a one-hot distribution to $0$ and a
