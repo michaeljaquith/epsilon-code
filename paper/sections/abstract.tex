@@ -15,10 +15,10 @@ exists at generation time, in the token-level probability distribution,
 and is gone from the committed output. It cannot be observed by repeated
 sampling.
 
-$\varepsilon$ is a \emph{decision-risk prioritization signal}: it identifies
-where the model was uncertain at generation time, not where the code is
-incorrect. We introduce $\eps$ (epsilon), a token-level uncertainty primitive
-that operates within a single generation using log-probabilities. We identify three
+We introduce $\eps$ (epsilon), a token-level \emph{decision-risk prioritization
+signal} that operates within a single generation using log-probabilities,
+identifying where the model was uncertain at generation time, not where the
+code is incorrect. We identify three
 categories of token-level uncertainty in generated code --- \emph{cosmetic}
 (naming), \emph{consequential} (API and library decisions), and
 \emph{implementation-approach} (algorithm style) --- and show that only

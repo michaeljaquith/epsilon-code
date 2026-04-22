@@ -26,8 +26,10 @@ Usage:
 """
 import argparse
 import json
+import os
 import sys
 from datetime import datetime
+from pathlib import Path
 
 # Ensure UTF-8 output on Windows terminals
 if hasattr(sys.stdout, "reconfigure"):
@@ -38,6 +40,14 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+# Load .env from project root (two levels up) — same pattern as benchmark_scenarios.py
+_env = Path(__file__).parent.parent.parent / ".env"
+if _env.exists():
+    for _line in _env.read_text().splitlines():
+        if "=" in _line and not _line.startswith("#"):
+            _k, _v = _line.split("=", 1)
+            os.environ.setdefault(_k.strip(), _v.strip())
 
 try:
     from openai import OpenAI
@@ -369,15 +379,26 @@ def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total
 # Main
 # ------------------------------------------------------------------ #
 
+def get_together_client() -> OpenAI:
+    key = os.environ.get("TOGETHER_API_KEY", "")
+    if not key:
+        raise RuntimeError("TOGETHER_API_KEY not set")
+    return OpenAI(api_key=key, base_url="https://api.together.xyz/v1")
+
+
 def main():
     parser = argparse.ArgumentParser(description="ε calibration benchmark")
     parser.add_argument("--model",    default="gpt-4o")
+    parser.add_argument("--provider", default="openai", choices=["openai", "together"])
     parser.add_argument("--no-color", action="store_true")
     parser.add_argument("--low-only", action="store_true", help="Run LOW set only")
     parser.add_argument("--high-only", action="store_true", help="Run HIGH set only")
     args = parser.parse_args()
 
-    client  = OpenAI()
+    if args.provider == "together":
+        client = get_together_client()
+    else:
+        client = OpenAI()
     wrapper = EpsilonWrapper(client, config=THRESHOLDS)
 
     if args.high_only:

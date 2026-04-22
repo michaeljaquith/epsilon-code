@@ -13,7 +13,7 @@ generation-time signal; motivates static-analysis integration.
 \paragraph{Confidently-resolved domains.} Prompts where every model
 has converged on a strong training-data prior produce $\eps = 0.000$
 regardless of correctness. Current-UTC datetime retrieval and
-HTTP-GET-to-JSON fall here across all three models. For stable
+HTTP-GET-to-JSON fall here across all four models. For stable
 widely-deployed APIs this is desirable; for deprecated-but-%
 confidently-recalled APIs it is Scenario B's failure mode.
 
@@ -41,15 +41,6 @@ three thresholds) was calibrated on GPT-4o; other models inherit
 these. The binary \textsc{flagged+} gate is robust; internal tier
 placement is a refinement on top.
 
-\subsection{The rising effective cost of AI error}
-\label{subsec:cost}
-
-The cost of an individual AI coding error is rising: more code per
-developer-hour, less scrutiny per line, compound pipelines amplifying
-upstream errors. A parallel reviewer architecture decouples review
-latency from developer attention: in our evaluation, batched reviews
-completed in seconds at fractions of a cent per entry.
-
 \subsection{Context learning as a microcosm}
 \label{subsec:context}
 
@@ -72,3 +63,8 @@ marker, or trigger targeted re-decoding with lower temperature on
 just the uncertain span. \textbf{Cross-decision consistency:}
 Scenario D's mismatches argue for AST-level consistency checks over
 \eps (e.g., \texttt{async def} $+$ blocking HTTP client).
+\textbf{Import-gated activation:} restricting \eps scoring to
+functions that import external libraries (i.e., skipping pure-logic
+functions) would eliminate the Type~3 false-positive floor at
+negligible cost, since production API-integration code almost always
+begins with an import.

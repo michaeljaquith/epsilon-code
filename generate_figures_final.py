@@ -6,14 +6,17 @@ Regenerate all paper figures for arXiv submission.
 Run from d:/Language/ :
     python generate_figures_final.py
 
-Produces 7 PDF files in paper/figures/:
+Produces 6 PDF files in paper/figures/:
     fig1_scatter.pdf
     fig3_scenarios.pdf
     fig5_roc_sweep.pdf
     fig6_pr_curve.pdf
     fig7_review_loop.pdf
     fig8_scenario_e.pdf
-    fig9_taxonomy.pdf
+
+Note: fig9_taxonomy.pdf is no longer produced; the taxonomy is now
+a LaTeX table (tab:taxonomy) in epsilon.tex. The fig9_taxonomy()
+function is preserved below for reproducibility but not called.
 """
 
 import sys
@@ -40,8 +43,8 @@ import numpy as np
 
 C_LOW          = '#4878CF'   # blue  - LOW prompts
 C_HIGH         = '#D65F5F'   # warm red - HIGH prompts
-C_THRESH_SOFT  = '#F5A623'   # orange - soft threshold 0.30
-C_THRESH_HARD  = '#D0021B'   # dark red - hard threshold 0.65
+C_THRESH_SOFT  = '#F5A623'   # orange - FLAGGED threshold (0.30)
+C_THRESH_HARD  = '#D0021B'   # dark red - PAUSED threshold (0.95)
 
 STATUS_COLORS = {
     'COMPLETE': '#6BAB6E',
@@ -141,11 +144,11 @@ def fig1_scatter():
 
     ax.axhline(0.30, color=C_THRESH_SOFT, linestyle='--', linewidth=1.1,
                alpha=0.85, zorder=2)
-    ax.axhline(0.65, color=C_THRESH_HARD, linestyle='--', linewidth=1.1,
+    ax.axhline(0.95, color=C_THRESH_HARD, linestyle='--', linewidth=1.1,
                alpha=0.85, zorder=2)
     ax.text(0.015, 0.31, 'FLAGGED (eps >= 0.30)',
             color=C_THRESH_SOFT, fontsize=FS_ANNOT, va='bottom')
-    ax.text(0.015, 0.66, 'PAUSED  (eps >= 0.65)',
+    ax.text(0.015, 0.96, 'PAUSED (eps >= 0.95)',
             color=C_THRESH_HARD, fontsize=FS_ANNOT, va='bottom')
 
     ax.set_xlabel('UQLM confidence (min_probability)')
@@ -173,11 +176,11 @@ def fig3_scenarios():
     sce_e_mean = float(np.mean(sce_e_runs))
 
     scenarios = [
-        ('A', 'Stripe deprecation',       0.914,      'PAUSED'),
-        ('B', 'OpenAI SDK v0 vs v1',      0.551,      'FLAGGED'),
-        ('C', 'SQLAlchemy 1.x vs 2.0',    0.435,      'FLAGGED'),
-        ('D', 'FastAPI async/sync',       0.812,      'PAUSED'),
-        ('E', 'Auth module (n=16 runs)',  sce_e_mean, 'PAUSED'),
+        ('A', 'Stripe deprecation',       0.878,      'FLAGGED'),
+        ('B', 'OpenAI SDK v0 vs v1',      0.560,      'FLAGGED'),
+        ('C', 'SQLAlchemy 1.x vs 2.0',    0.907,      'FLAGGED'),
+        ('D', 'FastAPI async/sync',       0.505,      'FLAGGED'),
+        ('E', 'Auth module (n=16 runs)',  sce_e_mean, 'FLAGGED'),
     ]
 
     labels = [f"{s[0]} \u2014 {s[1]}" for s in scenarios]
@@ -191,13 +194,17 @@ def fig3_scenarios():
     ax.barh(y, values, color=colors, edgecolor='white', linewidth=0.8,
             height=0.62)
 
-    # thresholds
+    # thresholds (3-tier scheme: FLAGGED 0.30-0.95, PAUSED >= 0.95)
     ax.axvline(0.30, color=C_THRESH_SOFT, linestyle='--', linewidth=1.1, alpha=0.85)
-    ax.axvline(0.65, color=C_THRESH_HARD, linestyle='--', linewidth=1.1, alpha=0.85)
-    ax.text(0.31, len(scenarios) - 0.2, '0.30', color=C_THRESH_SOFT,
-            fontsize=FS_ANNOT, va='center')
-    ax.text(0.66, len(scenarios) - 0.2, '0.65', color=C_THRESH_HARD,
-            fontsize=FS_ANNOT, va='center')
+    ax.axvline(0.95, color=C_THRESH_HARD, linestyle='--', linewidth=1.1, alpha=0.85)
+
+    # Threshold labels placed below the x-axis using xaxis transform
+    # (x in data coords, y in axes coords: 0=bottom, negative=below axis)
+    trans = ax.get_xaxis_transform()
+    ax.text(0.30, -0.10, '0.30', color=C_THRESH_SOFT, fontsize=FS_ANNOT,
+            ha='center', va='top', transform=trans)
+    ax.text(0.95, -0.10, '0.95', color=C_THRESH_HARD, fontsize=FS_ANNOT,
+            ha='center', va='top', transform=trans)
 
     for i, (v, st) in enumerate(zip(values, statuses)):
         ax.text(v + 0.015, i, f'{v:.3f}  ({st})', va='center',
@@ -206,16 +213,18 @@ def fig3_scenarios():
     ax.set_yticks(y)
     ax.set_yticklabels(labels, fontsize=FS_LABEL)
     ax.invert_yaxis()
-    ax.set_xlim(0.0, 1.22)   # extra room for end labels
+    ax.set_xlim(0.0, 1.30)   # extra room for end labels
     ax.set_xlabel(r'$\varepsilon$ (peak)', fontsize=FS_LABEL)
 
-    # legend outside plot area, upper right
-    legend_patches = [mpatches.Patch(color=STATUS_COLORS[k], label=k)
-                      for k in ('FLAGGED', 'PAUSED')]
-    ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0.0, 1.0),
-              frameon=False, ncol=2)
+    # Legend placed fully outside the axes area, above the plot
+    legend_patches = [
+        mpatches.Patch(color=STATUS_COLORS['FLAGGED'], label=r'FLAGGED ($0.30 \leq \varepsilon < 0.95$)'),
+    ]
+    ax.legend(handles=legend_patches, loc='lower left',
+              bbox_to_anchor=(0.0, 1.02), bbox_transform=ax.transAxes,
+              frameon=False, ncol=1)
 
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0, 1, 0.96])   # leave space above for legend
     _save(fig, 'fig3_scenarios.pdf')
 
 
@@ -266,27 +275,35 @@ def fig5_roc_sweep():
     thr_e, tpr_e, fpr_e = _sweep(eps_high, eps_low, direction='ge')
     thr_u, tpr_u, fpr_u = _sweep(uq_high,  uq_low,  direction='le')
 
+    # Slightly larger fonts for this figure (user reported the labels looked
+    # a touch small). Axis labels get FS_ANNOT+2, ticks get FS_TICK+1, legend +1.
+    axis_fs   = FS_ANNOT + 2
+    tick_fs   = FS_TICK + 1
+    legend_fs = FS_ANNOT + 1
+    title_fs  = FS_BASE + 1
+
     fig, axes = plt.subplots(1, 2, figsize=(W_DOUBLE, 3.2), sharey=True)
 
     ax = axes[0]
     ax.plot(fpr_e, tpr_e, color=C_HIGH, linewidth=1.8, label=r'$\varepsilon$')
     ax.plot([0, 1], [0, 1], color='#888', linewidth=0.7, linestyle=':',
             label='chance')
-    # annotate operating thresholds 0.30 and 0.65
+    # annotate operating thresholds 0.30 and 0.95
     for t_mark, color, lbl in ((0.30, C_THRESH_SOFT, 't=0.30'),
-                               (0.65, C_THRESH_HARD, 't=0.65')):
+                               (0.95, C_THRESH_HARD, 't=0.95')):
         idx = int(round(t_mark * (len(thr_e) - 1)))
         ax.scatter([fpr_e[idx]], [tpr_e[idx]], s=46, color=color,
                    edgecolor='white', linewidth=0.8, zorder=5)
         ax.annotate(lbl, (fpr_e[idx], tpr_e[idx]),
                     textcoords='offset points', xytext=(6, -10),
-                    fontsize=FS_ANNOT, color=color)
+                    fontsize=legend_fs, color=color)
     ax.set_xlim(-0.02, 1.02)
     ax.set_ylim(-0.02, 1.05)
-    ax.set_xlabel('false-positive rate (LOW flagged)')
-    ax.set_ylabel('detection rate (HIGH caught)')
-    ax.set_title(r'$\varepsilon$ threshold sweep', fontsize=FS_BASE)
-    ax.legend(loc='lower right', frameon=False)
+    ax.set_xlabel('false-positive rate (LOW flagged)', fontsize=axis_fs)
+    ax.set_ylabel('detection rate (HIGH caught)', fontsize=axis_fs)
+    ax.tick_params(axis='both', labelsize=tick_fs)
+    ax.set_title(r'$\varepsilon$ threshold sweep', fontsize=title_fs)
+    ax.legend(loc='lower right', frameon=False, fontsize=legend_fs)
 
     ax = axes[1]
     ax.plot(fpr_u, tpr_u, color=C_LOW, linewidth=1.8, label='UQLM')
@@ -294,9 +311,10 @@ def fig5_roc_sweep():
             label='chance')
     ax.set_xlim(-0.02, 1.02)
     ax.set_ylim(-0.02, 1.05)
-    ax.set_xlabel('false-positive rate (LOW flagged)')
-    ax.set_title('UQLM threshold sweep', fontsize=FS_BASE)
-    ax.legend(loc='lower right', frameon=False)
+    ax.set_xlabel('false-positive rate (LOW flagged)', fontsize=axis_fs)
+    ax.tick_params(axis='both', labelsize=tick_fs)
+    ax.set_title('UQLM threshold sweep', fontsize=title_fs)
+    ax.legend(loc='lower right', frameon=False, fontsize=legend_fs)
 
     fig.tight_layout()
     _save(fig, 'fig5_roc_sweep.pdf')
@@ -325,11 +343,10 @@ def fig6_pr_curve():
     ax.axhline(base_rate, color='#888', linestyle=':', linewidth=1.0,
                zorder=2, label=f'base rate = {base_rate:.3f}')
 
-    # operating points
+    # operating points (3-tier scheme: FLAGGED 0.30-0.95, PAUSED >= 0.95)
     op_points = [
         ('FLAGGED+ (t=0.30)', 1.000, 0.272, C_THRESH_SOFT),
-        ('PAUSED+  (t=0.65)', 0.868, 0.293, C_THRESH_HARD),
-        ('ABORTED  (t=0.95)', 0.547, 0.309, '#8B0000'),
+        ('PAUSED (t=0.95)',   0.547, 0.309, C_THRESH_HARD),
     ]
     for lbl, r, p, col in op_points:
         ax.scatter([r], [p], s=72, color=col, edgecolor='white',
@@ -458,11 +475,10 @@ def fig8_scenario_e():
     ax.bar(x + w/2, per_fn,   w, color=C_HIGH, edgecolor='white',
            label='per-function (6 calls)')
 
+    # FLAGGED threshold (0.30) is the load-bearing boundary for scenario E;
+    # PAUSED (0.95) is too high to be informative for these values.
     ax.axhline(0.30, color=C_THRESH_SOFT, linestyle='--', linewidth=1.0, alpha=0.8)
-    ax.axhline(0.65, color=C_THRESH_HARD, linestyle='--', linewidth=1.0, alpha=0.8)
-    ax.text(len(names) - 0.5, 0.31, '0.30', color=C_THRESH_SOFT,
-            fontsize=FS_ANNOT, ha='right', va='bottom')
-    ax.text(len(names) - 0.5, 0.66, '0.65', color=C_THRESH_HARD,
+    ax.text(len(names) - 0.5, 0.31, 'FLAGGED (0.30)', color=C_THRESH_SOFT,
             fontsize=FS_ANNOT, ha='right', va='bottom')
 
     # annotate bar heights
@@ -610,7 +626,9 @@ def main():
     fig6_pr_curve()
     fig7_review_loop()
     fig8_scenario_e()
-    fig9_taxonomy()
+    # fig9_taxonomy() is intentionally not called: the taxonomy is now
+    # rendered as a LaTeX table (tab:taxonomy) in epsilon.tex. The function
+    # is retained below for reproducibility but is no longer invoked.
     print("done.")
 
 

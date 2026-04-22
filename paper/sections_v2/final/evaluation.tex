@@ -4,62 +4,106 @@
 \subsection{Qualitative scenarios}
 \label{subsec:scenarios}
 
-Five scenarios exercise distinct failure modes, run on
-GPT-4o-2024-08-06 with \texttt{logprobs=True, top\_logprobs=5} and a
-system prompt specifying concise naming conventions.
+Five scenarios exercise distinct failure modes. Scenarios A--D are
+run across four models (GPT-4o-2024-08-06, GPT-4o-mini, GPT-4-turbo,
+DeepSeek V3) with \texttt{logprobs=True, top\_logprobs=5},
+temperature $= 0$, and a system prompt specifying concise naming
+conventions. Scenario E is evaluated on GPT-4o across 16 independent
+runs.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llcccc}
+\toprule
+ & & \multicolumn{4}{c}{$\eps$ (tier)} \\
+\cmidrule(lr){3-6}
+ & Scenario & GPT-4o & GPT-4o-mini & GPT-4-turbo & DeepSeek V3 \\
+\midrule
+A & Stripe deprecation        & $0.878$ \textsc{f} & $0.665$ \textsc{f} & $0.680$ \textsc{f} & $0.775$ \textsc{f} \\
+B & OpenAI SDK v0 vs v1       & $0.560$ \textsc{f} & $0.487$ \textsc{f} & $0.678$ \textsc{f} & $0.646$ \textsc{f} \\
+C & SQLAlchemy 1.x vs 2.0     & $0.907$ \textsc{f} & $\mathbf{0.000}$ \textsc{c} & $0.911$ \textsc{f} & $0.925$ \textsc{f} \\
+D & FastAPI async/sync        & $0.505$ \textsc{f} & $0.506$ \textsc{f} & $0.774$ \textsc{f} & $0.679$ \textsc{f} \\
+\bottomrule
+\end{tabular}
+\caption{Scenarios A--D across four models. \textsc{f} = \textsc{%
+flagged} ($0.30 \le \eps < 0.95$); \textsc{c} = \textsc{complete}
+($\eps < 0.30$). All $15$ of $16$ cells are \textsc{flagged}; the
+lone miss is GPT-4o-mini on SQLAlchemy, where the model committed to
+one version with no hesitation ($\eps = 0.000$) --- a genuine false
+negative. No HIGH prompt crossed the \textsc{paused} threshold
+($\eps \ge 0.95$) in this sweep.}
+\label{tab:scenarios-multimodel}
+\end{table}
 
 \paragraph{A --- Deprecated API (Stripe).}
-\textit{``Charge a customer's card for \$50.''} $\eps = 0.914$,
-\textsc{paused}. The peak token is the method selector after
-\texttt{stripe}: \texttt{.Ch} (\texttt{Charge}, prob.\ $0.52$) vs.\
-\texttt{.Payment} (\texttt{PaymentIntent}, prob.\ $0.47$). Both paths
-are in the training data; neither is definitively preferred.
+\textit{``Charge a customer's card for \$50.''} GPT-4o: $\eps =
+0.878$, \textsc{flagged}. The peak token is the method selector
+after \texttt{stripe}: \texttt{.Ch} (\texttt{Charge}, prob.\ $0.52$)
+vs.\ \texttt{.Payment} (\texttt{PaymentIntent}, prob.\ $0.47$). Both
+paths are in the training data; neither is definitively preferred.
+All four models flag.
 
 \paragraph{B --- Confident wrongness (OpenAI SDK).}
-\textit{``Call GPT-4 and return the response text.''} $\eps = 0.551$,
-\textsc{flagged}. The model generated v0
-(\texttt{openai.ChatCompletion.create(\ldots)}) confidently; v0 raises
-\texttt{AttributeError} on SDK $\ge 1.0$. \eps fired not on the API
-call --- the model was certain --- but on surrounding parameter
-design. \textsc{flagged} routes the function to the review loop; the reviewer,
-examining the full function, surfaces the deprecated call. This is
-indirect detection: \eps flagged adjacent uncertainty, not the failing
-token itself.
+\textit{``Call GPT-4 and return the response text.''} GPT-4o: $\eps
+= 0.560$, \textsc{flagged}. The model generated v0
+(\texttt{openai.ChatCompletion.create(\ldots)}) confidently; v0
+raises \texttt{AttributeError} on SDK $\ge 1.0$. \eps fired not on
+the API call --- the model was certain at that token --- but on
+surrounding parameter design. \textsc{flagged} routes the function
+to the review loop; the reviewer, examining the full function,
+surfaces the deprecated call. This is indirect detection: \eps
+flagged adjacent uncertainty, not the failing token itself. All
+four models flag.
 
 \paragraph{C --- Syntax split (SQLAlchemy).}
-\textit{``Query all active users.''} $\eps = 0.435$, \textsc{flagged}.
-The model chose 1.x (\texttt{db.query(User).filter(\ldots)}); primary
-flag was the import path. \textsc{flagged} (not \textsc{paused})
-reflects preference without certainty.
+\textit{``Query all active users.''} GPT-4o: $\eps = 0.907$,
+\textsc{flagged}, near the top of the \textsc{flagged} range ---
+the model is highly uncertain which SQLAlchemy version to target.
+GPT-4-turbo and DeepSeek V3 produce similarly high \eps ($0.911$,
+$0.925$). GPT-4o-mini, however, produces $\eps = 0.000$
+(\textsc{complete}): it commits to one version with no visible
+hesitation. This is a genuine false negative --- the same prompt
+that surfaces uncertainty in three models of four generates
+confidently-chosen output in the fourth. The cross-model contrast
+is the interesting finding: intra-generational signal exists only
+when the model itself is uncertain, and training-data convergence
+on one branch silently removes it.
 
 \paragraph{D --- Compatibility mismatch (FastAPI async/sync).}
 \textit{``FastAPI endpoint that fetches weather from an external
-API.''} $\eps = 0.812$, \textsc{paused}. The model generated
+API.''} GPT-4o: $\eps = 0.505$, \textsc{flagged} (solidly mid-%
+range); GPT-4-turbo is highest at $0.774$. The model generated
 \texttt{async def} with \texttt{requests.get()} inside --- two
-individually defensible decisions (\texttt{async} $\eps = 0.26$,
-\texttt{requests} $\eps = 0.31$) that combine into a silent bug
-(blocks the event loop). \eps did not fire on the async/sync
-combination directly; the \textsc{paused} flag came from URL/key
-handling elsewhere in the file. A mismatch post-processor, run on
-already-flagged functions, surfaced the combination explicitly ---
-arguing for cross-decision consistency checks as a complement to \eps.
+individually defensible decisions that combine into a silent bug
+(blocks the event loop). The cross-decision mismatch is not
+directly what \eps measures: \eps sees token-level uncertainty,
+which in this scenario fires on surrounding choices (URL and key
+handling) rather than on the async/sync combination itself. A
+mismatch post-processor, run on already-flagged functions, can
+surface the combination explicitly --- arguing for cross-decision
+consistency checks as a complement to \eps. The practical outcome
+is unchanged: the function is \textsc{flagged} and reaches the
+reviewer.
 
 \paragraph{E --- Multi-function module.}
-Six auth functions with four interdependent decisions (password hash,
-JWT, SQLAlchemy, datetime). \textsc{paused} on all 16 runs,
-$\eps \in [0.69, 0.92]$. Library choices varied across runs (passlib,
-bcrypt, PyJWT, python-jose, mixed), but each run looked internally
-confident. Early functions $\eps = 0.40$--$0.58$; later functions
-frequently $\eps = 0.000$ --- an \emph{uncertainty collapse} after
-initial commitment. The first function is the high-risk window.
+Six auth functions with four interdependent decisions (password
+hash, JWT, SQLAlchemy, datetime). \textsc{flagged} on all 16 runs,
+$\eps \in [0.69, 0.92]$ (none crossed \textsc{paused}). Library
+choices varied across runs (passlib, bcrypt, PyJWT, python-jose,
+mixed), but each run looked internally confident. Early functions
+$\eps = 0.40$--$0.58$; later functions frequently $\eps = 0.000$
+--- an \emph{uncertainty collapse} after initial commitment. The
+first function is the high-risk window.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig3_scenarios.pdf}
-\caption{Scenarios A--E summarised by failure class and peak $\eps$.
-All five clear the \textsc{flagged} threshold; four cross \textsc{%
-paused}, giving the developer a single scalar urgency signal per
-failure mode.}
+\caption{Scenarios A--E (GPT-4o) summarised by failure class and
+peak $\eps$. All five clear the \textsc{flagged} threshold; none
+crosses the \textsc{paused} threshold ($\eps \ge 0.95$). The scalar
+urgency signal within \textsc{flagged} still varies across
+scenarios.}
 \label{fig:scenarios}
 \end{figure}
 
@@ -72,35 +116,45 @@ generated independently. When generated in a \emph{single} prompt with
 --- not just the later ones. The joint signature list plus the
 consistency instruction resolves the library choice before decoding
 starts, leaving nothing for \eps to observe
-(Table~\ref{tab:scenarioE}, GPT-4o-mini).
+(Table~\ref{tab:scenarioE}, GPT-4o-mini). The practical mitigation is
+to generate functions independently; the consistency constraint can
+be applied at review time rather than at generation time.
 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{l rr rr}
 \toprule
-Function & Combined peak \eps & Per-function peak \eps \\
+ & \multicolumn{2}{c}{GPT-4o-mini} & \multicolumn{2}{c}{DeepSeek V3} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Function & Combined & Per-fn & Combined & Per-fn \\
 \midrule
-\texttt{register\_user}          & $0.579$ & $0.627$ \\
-\texttt{login}                   & $0.820$ & $0.872$ \\
-\texttt{verify\_token}           & $0.606$ & $0.911$ \\
-\texttt{refresh\_token}          & $0.414$ & $0.711$ \\
-\texttt{request\_password\_reset}& $0.295$ & $0.788$ \\
-\texttt{reset\_password}         & $0.394$ & $0.728$ \\
+\texttt{register\_user}          & $0.579$ & $0.627$ & $0.424$ & $0.864$ \\
+\texttt{login}                   & $0.820$ & $0.872$ & $0.518$ & $0.972$ \\
+\texttt{verify\_token}           & $0.606$ & $0.911$ & $0.372$ & $0.735$ \\
+\texttt{refresh\_token}          & $0.414$ & $0.711$ & $0.503$ & $0.957$ \\
+\texttt{request\_password\_reset}& $\mathbf{0.295}$ & $0.788$ & $0.764$ & $0.760$ \\
+\texttt{reset\_password}         & $0.394$ & $0.728$ & $0.419$ & $0.878$ \\
 \bottomrule
 \end{tabular}
-\caption{Combined generation collapses \eps for every function.
-DeepSeek V3 shows the same pattern. When context resolves uncertainty
-before decoding, there is nothing for \eps to observe.}
+\caption{Combined generation reduces per-function \eps in both models.
+GPT-4o-mini's \texttt{request\_password\_reset} drops below the
+\textsc{flagged} threshold ($\mathbf{0.295}$, \textsc{complete});
+DeepSeek V3 combined values stay above $0.30$ but are uniformly lower
+than per-function values. When context resolves uncertainty before
+decoding, there is less for \eps to observe.}
 \label{tab:scenarioE}
 \end{table}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig8_scenario_e.pdf}
-\caption{Per-function generation keeps three of six functions above
-\textsc{flagged}; combined generation pushes four below it. The
-detector is honest about what is resolved prior to decoding.}
+\caption{GPT-4o-mini: per-function generation keeps all six functions in
+the \textsc{flagged} tier; combined generation collapses \eps for every
+function, dropping one of six (\texttt{request\_password\_reset},
+$\eps = 0.295$) to \textsc{complete}. DeepSeek V3 shows the same
+reduction in combined-mode \eps, but all six remain \textsc{flagged}
+(Table~\ref{tab:scenarioE}).}
 \label{fig:scenarioE}
 \end{figure}
 
@@ -110,9 +164,10 @@ detector is honest about what is resolved prior to decoding.}
 A 30-prompt calibration set: 10 LOW prompts (sort, palindrome,
 fibonacci, two-sum --- pure logic) and 20 HIGH prompts
 (API/version-split tasks across Stripe, OpenAI, SQLAlchemy, FastAPI,
-Pydantic), run on three models. GPT-4o achieves $85\%$ HIGH detection
-at $50\%$ LOW FP; GPT-4o-mini and GPT-4-turbo both achieve $70\%$ at
-$60\%$ LOW FP.
+Pydantic), run on four models. GPT-4o and DeepSeek V3 both achieve
+$85\%$ HIGH detection; GPT-4o-mini and GPT-4-turbo both achieve $70\%$.
+DeepSeek V3 carries a higher LOW FP rate ($70\%$) than the OpenAI
+models, consistent with its larger vocabulary of naming alternatives.
 
 \begin{table}[h]
 \centering
@@ -121,16 +176,18 @@ $60\%$ LOW FP.
 \toprule
 Model & HIGH detection & LOW FP \\
 \midrule
-GPT-4o      & $85\%$ (17/20) & $50\%$ (5/10) \\
-GPT-4o-mini & $70\%$ (14/20) & $60\%$ (6/10) \\
-GPT-4-turbo & $70\%$ (14/20) & $60\%$ (6/10) \\
+GPT-4o         & $85\%$ (17/20) & $50\%$ (5/10) \\
+GPT-4o-mini    & $70\%$ (14/20) & $60\%$ (6/10) \\
+GPT-4-turbo    & $70\%$ (14/20) & $60\%$ (6/10) \\
+DeepSeek V3    & $85\%$ (17/20) & $70\%$ (7/10) \\
 \bottomrule
 \end{tabular}
 \caption{Calibration at the \textsc{flagged} threshold ($\eps \ge
-0.30$). $95\%$ Wilson CIs: $\pm 17$pp HIGH, $\pm 30$pp LOW. GPT-4o's
-lead correlates with better logprob calibration. Three prompts produce
-$\eps = 0.000$ across all models --- \emph{confidently-resolved
-domains} where training priors have converged.}
+0.30$). $95\%$ Wilson CIs: $\pm 17$pp HIGH, $\pm 30$pp LOW. Three
+HIGH prompts produce $\eps = 0.000$ across all four models
+(\texttt{HTTP-GET-to-JSON}, \texttt{Pydantic serialization},
+\texttt{async HTTP GET}) --- \emph{confidently-resolved domains} where
+training priors have converged.}
 \label{tab:calibration}
 \end{table}
 
@@ -138,10 +195,10 @@ domains} where training priors have converged.}
 \label{subsec:low-gt}
 
 All 30 LOW functions passed \texttt{exec()} assertions. Tier
-breakdown: \textsc{complete} $5$, \textsc{flagged} $11$,
-\textsc{paused} $9$, \textsc{aborted} $5$. Non-\textsc{complete} tiers
-are dominated by Type 3 (brute vs.\ hash two-sum; recursive vs.\
-iterative fibonacci).
+breakdown: \textsc{complete} $5$, \textsc{flagged} $20$,
+\textsc{paused} $5$. Non-\textsc{complete} tiers are dominated by
+Type 3 (brute vs.\ hash two-sum; recursive vs.\ iterative
+fibonacci).
 
 \subsection{Precision/recall at tier boundaries}
 \label{subsec:pr}
@@ -158,16 +215,20 @@ LLM-judged; see~\S\ref{subsec:gt-disclosure}), 53 true failures and
 Threshold & Precision & Recall & F1 \\
 \midrule
 $\eps \ge 0.30$ (\textsc{flagged+}) & $0.272$ & $\mathbf{1.000}$ & $0.428$ \\
-$\eps \ge 0.65$ (\textsc{paused+})  & $0.293$ & $0.868$ & $\mathbf{0.438}$ \\
-$\eps \ge 0.95$ (\textsc{aborted})  & $0.309$ & $0.547$ & $0.394$ \\
+$\eps \ge 0.95$ (\textsc{paused})   & $\mathbf{0.309}$ & $0.547$ & $0.394$ \\
 \bottomrule
 \end{tabular}
 \caption{$n=200$, $53$ positives; $95\%$ Wilson CI on
 \textsc{flagged+} precision $[0.22, 0.33]$. Base failure rate $26.5\%
 \approx$ \textsc{flagged+} precision: the gate's value is recall, not
-precision. HIGH ground truth for $170/200$ entries is LLM-judged by
-GPT-4o (\S\ref{subsec:gt-disclosure}); LOW ground truth ($30/200$)
-is \texttt{exec()}-verified.}
+precision. \textsc{paused} fires rarely in our evaluation but achieves
+the highest precision of any tier. Recall $=1.000$ is the empirical
+result on this 200-entry evaluated set; it does not guarantee zero
+misses on unseen prompts --- Scenario C (GPT-4o-mini, $\eps = 0.000$)
+shows the limit for models with converged priors. HIGH ground truth
+for $170/200$ entries is LLM-judged by GPT-4o
+(\S\ref{subsec:gt-disclosure}); LOW ground truth ($30/200$) is
+\texttt{exec()}-verified.}
 \label{tab:pr}
 \end{table}
 
@@ -175,15 +236,16 @@ is \texttt{exec()}-verified.}
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig6_pr_curve.pdf}
 \caption{Precision stays near the base rate across the threshold
-range; recall falls monotonically. At \textsc{flagged+}, recall is
-$1.00$ at precision barely above base rate --- the gate's value is
-recall, not precision.}
+range; recall falls monotonically. Operating points marked:
+\textsc{flagged+} ($t=0.30$) at recall $1.00$ on the evaluated set with precision barely
+above base rate, and \textsc{paused} ($t=0.95$) at recall $0.547$
+with the highest precision of any tier. The gate's value is recall,
+not precision.}
 \label{fig:pr-curve}
 \end{figure}
 
-Tier monotonicity is modest ($27\%/29\%/31\%$); tiers are urgency
-signals, not calibrated probabilities. The useful binary boundary is
-\textsc{complete} vs.\ \textsc{flagged+}.
+Tiers are urgency signals, not calibrated probabilities. The useful
+binary boundary is \textsc{complete} vs.\ \textsc{flagged+}.
 
 \subsection{Review loop: context-free vs.\ context-primed reviewer}
 \label{subsec:review-loop}
@@ -194,7 +256,9 @@ parallel to a GPT-4o reviewer returning \textsc{cleared}/\textsc{%
 confirmed}; a consolidation pass processes remaining suspects.
 The \textbf{context-free} variant uses no reviewer context; the \textbf{context-primed} variant injects model-%
 specific learned false-positive patterns from a prior clean run (injecting suspect
-patterns caused over-flagging in pilots).
+patterns caused over-flagging in pilots). All results use GPT-4o as
+reviewer; reviewer-model ablation (e.g., with Claude or DeepSeek) is
+left to future work.
 
 \begin{table}[h]
 \centering
