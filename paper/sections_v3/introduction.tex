@@ -1,0 +1,104 @@
+\section{Introduction}
+\label{sec:introduction}
+
+AI-assisted developers now generate code several times faster than they can
+read it. A single engineer working with a coding assistant produces pull
+requests that would previously have represented days of work, and the
+bottleneck shifts from writing to reviewing. Reviewers have finite
+attention and cannot inspect every line with equal care, yet the failure
+modes of modern code generation concentrate in small, hard-to-spot places.
+Recent empirical work on deprecated APIs quantifies the scale of the
+problem: LLM-based code completion emits deprecated API calls at rates of
+roughly $25$--$38\%$ on standard prompts and substantially more on legacy
+codebases, because the training corpus straddles library-version transitions
+and the model has no posterior knowledge of deprecation at inference time~%
+\cite{wang2025deprecated}. The mistakes are not exotic: they are the
+ordinary traffic of a maturing ecosystem, rendered invisible by the
+uniformity of LLM output.
+
+A concrete instance. A model asked to charge a credit card might emit
+\texttt{stripe.Charge.create(...)} --- deprecated since 2019 --- or
+\texttt{stripe.PaymentIntent.create(...)}, the current API. Both arrive in
+the developer's editor with the same syntactic fluency, the same confident
+indentation, and no visible marker distinguishing a well-chosen call from
+one the model guessed at. At the method-selector token, the two choices
+split the probability mass near 50/50 ($0.52$ vs.\ $0.47$); the output
+exposes none of this. Failures of AI code generation cluster at exactly
+these points: version-split APIs, renamed SDK methods, signature changes
+between library releases. The model is uncertain; the output is not.
+
+\paragraph{Intra- versus inter-generational uncertainty.}
+The gap between a $0.52$-vs-$0.47$ internal split and a confident-looking
+output is not an accident of any particular model; it is structural.
+Existing uncertainty-quantification methods for LLMs are overwhelmingly
+\emph{inter-generational}: they sample the same prompt multiple times and
+measure disagreement across completions~\cite{kuhn2023semantic,uqlm2024}.
+This works when the model's uncertainty surfaces as instability across
+re-rolls --- factual questions, open-ended reasoning. Code is not such a
+task. A model with a $0.52$ prior on the deprecated \texttt{Charge} API
+samples that branch nearly every time; once the early tokens commit, the
+rest of the function is forced by context. The uncertainty exists, but it
+lives \emph{inside a single generation}, in the token distribution at each
+decoding step, not \emph{across} generations. We call this the
+\emph{intra- versus inter-generational} distinction. It is the conceptual
+foundation of this paper.
+
+\paragraph{\eps: a recall-maximizing filter.}
+We introduce \eps (epsilon), a per-token normalized Shannon entropy over
+the top-$k$ log-probabilities returned during generation. After AST-based
+filtering to keep only semantically meaningful tokens (attribute accesses,
+keyword arguments, import targets --- not whitespace, comments, or
+cosmetic identifiers), we aggregate via max-pooling to obtain a single
+score per function. \eps is not a detector --- it identifies where the
+model was uncertain at decoding time. At a threshold of $\eps \ge 0.30$
+it catches $100\%$ of true failures on our benchmark, at the cost of
+roughly $73\%$ false alarms.
+
+\paragraph{A three-way comparison.}
+The primary empirical contribution of this paper is a direct benchmark of
+three fundamentally different uncertainty signals on the same
+production-realistic prompts across four models. Multi-sample methods at
+$N=5$, $T=0.7$ detect $10$--$35\%$ of HIGH-risk prompts at $5\times$ API
+cost; the sequence-level mean token probability \papg~\cite{spiess2025calibration}
+detects $65$--$90\%$ at $1\times$ cost but offers no token-level
+attribution; \eps detects $70$--$85\%$ at $1\times$ cost with the specific
+uncertain token localized to a line and column. \papg is competitive with
+\eps on raw detection rate and in fact beats it on two of four OpenAI
+models; \eps's distinguishing property is not higher detection but
+\emph{where} the signal fires. The empirical case for the intra/inter
+distinction now rests on direct measurement, not just the UQLM-only
+comparison of earlier work.
+
+\paragraph{The two-stage system.}
+A $27\%$-precision filter is not meant to be used in isolation. Stage 2
+is a parallel LLM review loop: every flagged entry is dispatched, in
+parallel, to a reviewer model that returns \textsc{cleared} or
+\textsc{confirmed}. At current API prices this costs fractions of a cent
+per entry and completes in seconds. \eps has perfect recall but poor
+precision; the reviewer has good precision but would be too expensive per
+line. Filter plus reviewer gives a system with near-$100\%$ end-to-end
+precision while missing nothing the filter catches. A parallel review
+system scales with generation speed and moves review off the developer's
+critical path.
+
+\paragraph{Contributions.}
+\begin{enumerate}[noitemsep]
+    \item The intra/inter-generational distinction, formalized and with
+    empirical confirmation: \eps reaches $85\%$ detection on GPT-4o
+    against $10$--$35\%$ for direct multi-sample measurement and $5\%$ for
+    UQLM on the same benchmark.
+    \item \eps: an AST-filtered, max-aggregated token-level entropy score,
+    with a three-type uncertainty taxonomy (cosmetic, consequential,
+    implementation-approach) that motivates the filter design.
+    \item A two-stage filter-plus-review architecture, with a context-%
+    accumulation variant, evaluated on 201 entries across three models
+    (GPT-4o, GPT-4o-mini, DeepSeek V3): near-$100\%$ end-to-end
+    precision at $100\%$ recall. Scenario and calibration evaluation
+    additionally covers GPT-4-turbo (four models total).
+    \item The first direct three-way empirical comparison --- \eps vs.\
+    \papg vs.\ multi-sample --- on production-realistic version-split
+    prompts, isolating where each signal fires and where it does not.
+\end{enumerate}
+
+Implementation and benchmark are at
+\url{https://github.com/michaeljaquith/epsilon-code}.

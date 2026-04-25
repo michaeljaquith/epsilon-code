@@ -509,7 +509,7 @@ if cross_idx is not None:
 
 ax_r.set_xlim(0, 1)
 ax_r.set_ylim(0, 1.05)
-ax_r.set_xlabel('UQLM confidence threshold $t$ (fire if conf < $t$)')
+ax_r.set_xlabel('UQLM confidence threshold $t$')
 ax_r.set_ylabel('rate')
 ax_r.set_title('UQLM threshold sweep (gpt-4o)')
 ax_r.legend(loc='upper left', framealpha=0.9, edgecolor='#ccc', fontsize=8.5)

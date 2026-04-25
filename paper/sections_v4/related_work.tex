@@ -1,0 +1,169 @@
+\section{Related Work}
+\label{sec:related}
+
+Four adjacent lines of work inform the design of \eps: empirical
+studies of deprecated API usage (which motivate the problem), token-%
+level and sequence-level calibration of LLMs for code (which share
+the underlying logprob signal), multi-sample uncertainty
+quantification (which is the dominant alternative and the closest
+point of comparison), and adaptive decoding (which uses the same
+per-token entropy signal for a different purpose). We review each in
+turn, closing with static analysis.
+
+\subsection{Deprecated and version-split API usage}
+\label{subsec:related-deprecated}
+
+Wang et al.~\cite{wang2025deprecated} present the first systematic
+study of deprecated API usage in LLM-based code completion, evaluating
+seven models on 145 API mappings drawn from eight popular Python
+libraries across $28{,}125$ completion prompts. They measure API
+Usage Plausibility (AUP) and Deprecated Usage Rate (DUR), finding
+that deprecated-API emission is prevalent across all evaluated
+models; the root cause they identify is that deprecated API usages
+are present in training data while deprecation status itself is not
+reliably propagated to inference time. Their mitigations (REPLACEAPI
+and INSERTPROMPT) operate at the prompt or post-generation level and
+require a known deprecation mapping.
+
+Their finding establishes that the problem we address is common in
+practice rather than a corner case: on version-split APIs and renamed
+SDK methods, models routinely commit to a deprecated branch without
+surface indication. Our work is complementary. Wang et al.\ measure
+\emph{how often} LLMs emit deprecated code and diagnose \emph{why}
+the output looks confident; \eps measures the \emph{signal at
+generation time} that distinguishes a confidently-chosen branch from
+an internally-contested one, and --- crucially for the review loop
+--- localizes that signal to a specific token rather than producing
+only a function-level score.
+
+\subsection{Token-level and sequence-level calibration}
+\label{subsec:related-calibration}
+
+Spiess et al.~\cite{spiess2025calibration} study calibration and
+correctness of language models for code, computing several confidence
+signals (including the sequence-level mean token probability, which
+we refer to throughout as \papg) and evaluating whether they
+correlate with functional correctness on HumanEval and related
+benchmarks. They find that generative code models are not well-%
+calibrated out of the box and that Platt scaling can recover
+calibration in settings where labelled correctness data is available.
+The \papg signal --- the exponential of the mean log-probability over
+all generated tokens --- is derived from the same raw logprob data
+that \eps uses, and is the closest signal-level comparator for the
+function-level part of \eps's output.
+
+Four differences between that setup and ours deserve emphasis. First,
+\emph{aggregation}: \papg takes a sequence-level mean of per-token
+probabilities; \eps takes a max after AST filtering, so a single
+high-entropy API-selector token is not diluted by long confident
+stretches. Second, \emph{filtering}: \eps restricts the input set to
+semantically meaningful tokens (attribute accesses, keyword arguments,
+import targets), while \papg averages over every token including
+whitespace and cosmetic names. Third, \emph{prompt regime}: Spiess et
+al.\ evaluate on HumanEval and similar benchmarks where correctness
+is well-defined by unit tests; we evaluate on version-split API
+prompts where the ground truth is ambiguous enough to require LLM
+judging (\S\ref{subsec:gt-disclosure}). Fourth, \emph{output
+granularity}: \papg produces one scalar per function and is silent on
+\emph{which token} carried the uncertainty. This fourth distinction
+is the one that matters for the review loop (\S\ref{sec:comparison}).
+Because \papg and \eps operate on the same underlying logprobs at the
+same $1\times$ API cost, a direct head-to-head comparison is
+possible; we report it in \S\ref{sec:comparison}.
+
+Earlier token-level calibration studies (Kadavath et
+al.~\cite{kadavath2022language}; Varshney et
+al.~\cite{varshney2023stitch}) establish that LLMs are reasonably
+calibrated at the token level for factual questions and that
+selective generation can exploit this. Our work extends that line to
+code, where AST filtering is what makes per-token entropy actionable
+rather than dominated by cosmetic variance. Conformal prediction
+approaches~\cite{quach2023conformal,angelopoulos2022conformal}
+provide set-valued predictions with coverage guarantees but do not
+localize which token within a generation is uncertain. Uncertainty
+propagation through multi-stage ML pipelines is studied in adjacent
+domains~\cite{jungo2020analyzing}.
+
+\subsection{Multi-sample and behavioural-diversity methods}
+\label{subsec:related-multisample}
+
+Inter-generational methods sample the same prompt multiple times and
+measure disagreement among outputs. Kuhn et
+al.~\cite{kuhn2023semantic} introduce semantic entropy: multiple
+completions are clustered by semantic equivalence (via natural
+language inference), and cross-cluster entropy provides a
+hallucination signal for factual QA.
+UQLM~\cite{uqlm2024} packages semantic negentropy and related signals
+as an open-source library; we include it here as the closest off-%
+the-shelf tool and report its performance in \S\ref{sec:comparison}
+in one sentence. Beyond these, a growing line of
+work~\cite{sharma2025multisample} applies stronger notions of
+equivalence --- up to and including symbolic execution or semantic-%
+equivalence checks on generated code --- to improve behavioural
+consistency detection specifically for code outputs.
+
+These methods are structurally limited for the task we study.
+Intra-generational uncertainty does not surface as output variation
+when the distribution is peaked (as it typically is for code tokens:
+a $0.52$-peaked distribution picks its peak nearly every time at
+temperature $0.7$, and always at temperature $0$). A model can be
+internally torn between two API calls and emit one of them unanimously
+across re-rolls. The Stripe example we report empirically in
+\S\ref{subsec:multisample-comp} --- GPT-4o with $\eps=0.878$ and
+sample diversity $=0.00$ across $N=5$ at $T=0.7$ --- is a direct
+instance. A stronger equivalence check improves precision on Type 3
+(implementation-approach) false positives, where two semantically
+equivalent implementations would be conflated by output-level
+diversity alone; but it cannot recover a signal that never varies
+across samples in the first place. The intra/inter distinction is
+not a claim that inter-generational methods are badly implemented,
+only that they are measuring a different quantity.
+
+\subsection{Generation-time intervention and adaptive decoding}
+\label{subsec:related-adadec}
+
+AdaDec~\cite{adadec2025} reads the same per-token Shannon entropy
+that \eps reads, but uses it at decoding time rather than review
+time: when the entropy at the current step exceeds a learned
+threshold, the decoder pauses and triggers a lookahead re-ranking
+step over candidate continuations. On HumanEval and MBPP across
+model sizes from $0.6$B to $8$B, AdaDec reports up to $15.5$pp
+improvement in Pass@1 over greedy decoding while pausing on
+$3.95$--$11.88\%$ of tokens --- the same order of magnitude as
+\eps's flagged-token rate of $10.5\%$ (\S\ref{subsec:token-focus}),
+which is not a coincidence: both identify the same set of decision
+points. The signal is the same as ours; the action is different.
+AdaDec improves the model's own output at generation time; \eps
+surfaces residual uncertainty \emph{after} the model has committed,
+for routing to downstream review. The two approaches are compatible:
+an AdaDec-enhanced generator still produces a token distribution at
+each step, and \eps operates on whatever distribution the final
+decoder emits. We do not evaluate a combined pipeline but expect
+\eps values to be lower on average after AdaDec-style intervention,
+with residual high-\eps tokens concentrating on consequential
+decisions that even a lookahead re-rank could not resolve.
+
+\subsection{Static analysis, linters, and execution-based evaluation}
+\label{subsec:related-static}
+
+Static analysis and linter rules catch \emph{known}-bad patterns for
+specific libraries once deprecation has been encoded into a ruleset.
+These approaches are complementary to \eps and represent the floor
+of detection: when a rule exists, a linter will catch the problem
+whether or not the model hesitated. \eps operates in the gap --- it
+fires where the model itself was uncertain, which includes version
+splits not yet in any ruleset (a library updated last week, a half-%
+migrated codebase) and internal renames that static analysis has no
+fact to test against. Execution-based code-generation
+benchmarks~\cite{chen2021evaluating,austin2021program,%
+jimenez2024swebench} measure whether the output passes test cases,
+not whether the model was confident; a silent dependency update can
+turn a fully-passing generation into a regression that no test in
+the current suite exercises. To our knowledge, no prior work treats
+within-generation \emph{token-level} uncertainty as a first-class
+routing signal for code review that localizes where within a
+function to look; the closest is CodeT~\cite{chen2022codet} and
+related self-consistency approaches, which are inter-generational by
+construction, and post-generation repair with uncertainty-based
+ranking~\cite{ye2022selfapr}, which operates on already-generated
+candidates.

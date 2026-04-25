@@ -1,0 +1,129 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+\label{subsec:limitations}
+
+\paragraph{Confident wrongness.} \eps cannot detect a model that is
+wrong and confident. If training placed all mass on a deprecated API,
+the token probability is sharp and \eps is low; the system emits the
+wrong code with \textsc{complete} status. Scenario B is the concrete
+example: GPT-4o emitted \texttt{openai.ChatCompletion.create(\ldots)}
+--- the v0 API, which raises \texttt{AttributeError} on SDK $\ge 1.0$
+--- with no hesitation at that token; \eps fired only because of
+adjacent uncertainty in surrounding parameter design. Wang et al.~%
+\cite{wang2025deprecated} report this failure mode at scale: $25$--$38\%$
+deprecated-API emission on standard prompts across seven LLMs, driven
+by confident predictions from training data that predates the
+deprecation. This is a fundamental limit of any generation-time signal
+and a primary motivation for pairing \eps with static analysis
+(\S\ref{subsec:static-cov}) rather than replacing it.
+
+\paragraph{Confidently-resolved domains.} Prompts where every model
+has converged on a strong training-data prior produce $\eps = 0.000$
+regardless of correctness. Current-UTC datetime retrieval and
+HTTP-GET-to-JSON fall here across all four models. For stable
+widely-deployed APIs this is desirable; for deprecated-but-%
+confidently-recalled APIs it is Scenario B's failure mode.
+
+\paragraph{Small-sample calibration.} Main calibration is 30 prompts
+per model; Wilson intervals on HIGH detection are $\pm 17$pp at
+$n=20$. We claim recall-first design plus an empirical miss rate of
+zero on the sets evaluated, not a proof of perfect recall. The \papg
+comparison in \S\ref{subsec:papg-comp} uses the same 30 prompts,
+which bounds all statistical claims in that subsection to the same
+small-sample regime; cross-validation would strengthen all claims on
+both sides.
+
+\paragraph{\papg comparison scope.} The \papg evaluation uses the
+calibration benchmark (30 prompts per model, 120 total) and has not
+been extended to the 201-entry production-plus-scenario set used for
+the review-loop results. Whether \papg's better precision on some
+models translates to better end-to-end precision in a full two-stage
+system, and whether its lack of token-level attribution actually
+hurts reviewer performance in practice, are open empirical questions.
+The signal-level comparison we report should not be read as a
+system-level comparison; a full \papg-routed review-loop experiment
+is future work.
+
+\paragraph{Multi-sample sensitivity.} The multi-sample comparison uses
+$N=5$ at $T=0.7$. Higher $N$ or higher $T$ might recover additional
+behavioural diversity on some prompts --- a $T=1.0$ run would nearly
+double the sampling probability of the minority branch on a $0.52/0.47$
+token --- though the structural argument does not depend on parameter
+choice: \eps is read at $T=0$ where the model's internal distribution
+is exposed directly, while any sampling-based method is limited to
+what that distribution produces as behaviour. A higher-$T$
+configuration would also shift the baseline against which
+\emph{generation-time} cost is compared, since production code
+generation is typically run at $T \le 0.3$ or deterministically.
+
+\paragraph{Type 3 floor.} Implementation-approach uncertainty on
+simple prompts (brute vs.\ hash two-sum) legitimately raises \eps on
+correct code. AST filtering does not remove it; the $\sim 50\%$ LOW
+FP is predominantly Type 3 and unlikely to shrink without sacrificing
+recall.
+
+\paragraph{LLM-judged ground truth.}\label{subsec:gt-disclosure}
+LOW ground truth is \texttt{exec()}-verified against assertions
+covering return type, edge cases, and correctness. HIGH ground truth
+is LLM-judged via GPT-4o. Circularity exists where the evaluated
+model shares a family with the judge (GPT-4o-mini judged by GPT-4o);
+results for that model should be read with that caveat. We disclose
+rather than overclaim human verification we did not perform.
+
+\paragraph{Hyperparameters.} The cascaded tier algorithm (six checks,
+three thresholds) was calibrated on GPT-4o; other models inherit
+these. The binary \textsc{flagged+} gate is robust; internal tier
+placement is a refinement on top.
+
+\subsection{\textsc{paused} tier and delivery semantics}
+\label{subsec:paused}
+
+\S\ref{subsec:tiers} defined \textsc{paused} as $\eps \ge 0.95$.
+Whether \textsc{paused} actually holds code delivery until the review
+completes, or simply runs the review loop like \textsc{flagged}, is
+an implementation choice we do not prescribe. In our four-model
+scenario sweep no HIGH prompt crossed the \textsc{paused} threshold,
+so the question did not become binding. Production use would likely
+default to the non-blocking treatment (same routing as
+\textsc{flagged}) while exposing \textsc{paused} as a higher-urgency
+signal in whatever UI surfaces reviewer output.
+
+\subsection{Context learning as a microcosm}
+\label{subsec:context}
+
+Injecting learned false-positive patterns into the reviewer's context
+(the configuration evaluated in \S\ref{subsec:review-loop}) raised
+clearance from $53.2\%$ to $68.7\%$, and late false positives fell from
+$4$ to $0$. This is in-context improvement on a fixed model; training-%
+time improvement would be expected to compound with it. The same
+mechanism --- priming the reviewer with model-specific priors from a
+prior clean run --- is a candidate for the same kind of systematic
+study that has emerged for in-context learning more broadly.
+
+\subsection{Future work}
+\label{subsec:future}
+
+\textbf{Pipeline propagation:} upstream \eps should propagate as
+prior uncertainty into downstream generations, modulating sampling
+temperature or review threshold. \textbf{Open-source models:} vLLM
+exposes full top-$k$; a Llama/Qwen/Mistral calibration run would test
+whether the recall-first boundary holds outside OpenAI. \textbf{Per-%
+token intervention:} surface the high-\eps token as an inline editor
+marker, or trigger targeted re-decoding with lower temperature on
+just the uncertain span (AdaDec-style, but at review time).
+\textbf{Cross-decision consistency:} Scenario D's mismatches argue
+for AST-level consistency checks over \eps (e.g., \texttt{async def}
+$+$ blocking HTTP client). \textbf{Import-gated activation:}
+restricting \eps scoring to functions that import external libraries
+(i.e., skipping pure-logic functions) would eliminate the Type 3
+false-positive floor at negligible cost, since production API-%
+integration code almost always begins with an import.
+\textbf{Combined \papg + \eps routing:} \papg's function-level
+specificity could be combined with \eps's token localization --- a
+two-signal gate that fires when both agree may recover precision
+without sacrificing recall. \textbf{Full-scale \papg comparison:}
+extending the \papg evaluation to the 201-entry review-loop set
+would convert the signal-level comparison of \S\ref{subsec:papg-comp}
+into a system-level one.

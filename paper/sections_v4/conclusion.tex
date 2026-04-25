@@ -1,0 +1,51 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We introduced \eps, a per-token normalized Shannon entropy over
+top-$k$ log-probabilities, AST-filtered and max-aggregated into a
+per-function score that also preserves per-token attribution. The
+function-level score is a recall-maximizing filter: on the evaluated
+set, it flags $97\%$ of \textsc{high} API-integration prompts and
+catches $100\%$ of true failures at precision $0.272$. The function-%
+level claim on its own is not distinguishing. The sequence-level
+mean token probability \papg of Spiess et
+al.~\cite{spiess2025calibration} reads the same logprobs, costs the
+same $1\times$ in API budget, and is competitive with or better
+than \eps on function-level detection for three of four OpenAI
+models. \papg deserves that credit.
+
+The distinguishing contribution is what the function-level score
+gives up to become a single scalar, and what \eps preserves instead.
+Of the $\sim 98$ semantic tokens in a typical flagged function,
+$10.5\%$ exceed the flag threshold and $1.5\%$ exceed the paused
+threshold. A reviewer given \eps's output is not asked to re-read
+$98$ tokens; they are asked to evaluate $10$ at the flag threshold
+and $1$--$2$ at the paused threshold --- an $89$--$98.5\%$
+reduction in within-function review surface. No sequence-level or
+inter-generational signal in the literature produces this
+localization at the same cost. \papg cannot: it is one scalar per
+function. Multi-sample cannot: a $0.52/0.47$ internal split
+produces a unanimous output, as GPT-4o on Stripe Scenario A
+empirically demonstrates ($\eps = 0.878$, sample diversity $=0.00$
+across $N=5$ at $T=0.7$). UQLM detects $5\%$ of our \textsc{high}
+prompts on the same benchmark. The intra-generational signal is a
+different quantity from the inter-generational one, and it is the
+quantity that happens to be actionable for code.
+
+The two-stage architecture is how this becomes a working system.
+Stage $1$ is the recall-maximizing filter; stage $2$ is a parallel
+LLM reviewer directed to the specific high-\eps tokens rather than
+asked to re-read the function. On $201$ entries across three
+models, a context-primed reviewer clears $68.7\%$ of flagged entries
+with zero late false positives. The token-level attribution is not
+decoration; it is the mechanism that makes the reviewer fast enough
+to keep up with machine-speed code generation.
+
+The same mechanism --- early-token commitment forcing later tokens,
+leaving the genuine uncertainty concentrated in a $1$--$2\%$ slice
+of the generation --- plausibly applies in other structured-output
+domains (SQL, configuration files, typed program synthesis);
+empirical verification is left to future work. Generation is fast;
+review is the bottleneck. A filter that misses nothing, plus a
+reviewer that is told exactly where to look, moves review off the
+developer's critical path.

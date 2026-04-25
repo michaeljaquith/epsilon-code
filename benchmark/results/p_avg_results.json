@@ -1,0 +1,430 @@
+{
+  "gpt-4o": {
+    "n_low": 10,
+    "n_high": 20,
+    "eps_detection": 17,
+    "eps_fp": 5,
+    "eps_det_rate": 0.85,
+    "eps_fp_rate": 0.5,
+    "p_avg_at_matching_fp": {
+      "threshold": 0.05,
+      "detection": 17,
+      "det_rate": 0.85,
+      "fp": 5,
+      "fp_rate": 0.5
+    },
+    "sweep": [
+      {
+        "threshold": 0.05,
+        "detection": 17,
+        "n_high": 20,
+        "det_rate": 0.85,
+        "fp": 5,
+        "n_low": 10,
+        "fp_rate": 0.5
+      },
+      {
+        "threshold": 0.1,
+        "detection": 11,
+        "n_high": 20,
+        "det_rate": 0.55,
+        "fp": 2,
+        "n_low": 10,
+        "fp_rate": 0.2
+      },
+      {
+        "threshold": 0.15,
+        "detection": 5,
+        "n_high": 20,
+        "det_rate": 0.25,
+        "fp": 1,
+        "n_low": 10,
+        "fp_rate": 0.1
+      },
+      {
+        "threshold": 0.2,
+        "detection": 1,
+        "n_high": 20,
+        "det_rate": 0.05,
+        "fp": 1,
+        "n_low": 10,
+        "fp_rate": 0.1
+      },
+      {
+        "threshold": 0.25,
+        "detection": 1,
+        "n_high": 20,
+        "det_rate": 0.05,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.3,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.4,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.5,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.75,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      }
+    ]
+  },
+  "gpt-4o-mini": {
+    "n_low": 10,
+    "n_high": 20,
+    "eps_detection": 14,
+    "eps_fp": 6,
+    "eps_det_rate": 0.7,
+    "eps_fp_rate": 0.6,
+    "p_avg_at_matching_fp": {
+      "threshold": 0.05,
+      "detection": 15,
+      "det_rate": 0.75,
+      "fp": 1,
+      "fp_rate": 0.1
+    },
+    "sweep": [
+      {
+        "threshold": 0.05,
+        "detection": 15,
+        "n_high": 20,
+        "det_rate": 0.75,
+        "fp": 1,
+        "n_low": 10,
+        "fp_rate": 0.1
+      },
+      {
+        "threshold": 0.1,
+        "detection": 4,
+        "n_high": 20,
+        "det_rate": 0.2,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.15,
+        "detection": 2,
+        "n_high": 20,
+        "det_rate": 0.1,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.2,
+        "detection": 1,
+        "n_high": 20,
+        "det_rate": 0.05,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.25,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.3,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.4,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.5,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.75,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      }
+    ]
+  },
+  "gpt-4-turbo": {
+    "n_low": 10,
+    "n_high": 20,
+    "eps_detection": 14,
+    "eps_fp": 6,
+    "eps_det_rate": 0.7,
+    "eps_fp_rate": 0.6,
+    "p_avg_at_matching_fp": {
+      "threshold": 0.05,
+      "detection": 18,
+      "det_rate": 0.9,
+      "fp": 4,
+      "fp_rate": 0.4
+    },
+    "sweep": [
+      {
+        "threshold": 0.05,
+        "detection": 18,
+        "n_high": 20,
+        "det_rate": 0.9,
+        "fp": 4,
+        "n_low": 10,
+        "fp_rate": 0.4
+      },
+      {
+        "threshold": 0.1,
+        "detection": 11,
+        "n_high": 20,
+        "det_rate": 0.55,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.15,
+        "detection": 4,
+        "n_high": 20,
+        "det_rate": 0.2,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.2,
+        "detection": 1,
+        "n_high": 20,
+        "det_rate": 0.05,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.25,
+        "detection": 1,
+        "n_high": 20,
+        "det_rate": 0.05,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.3,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.4,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.5,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.75,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      }
+    ]
+  },
+  "deepseek-v3": {
+    "n_low": 10,
+    "n_high": 20,
+    "eps_detection": 17,
+    "eps_fp": 7,
+    "eps_det_rate": 0.85,
+    "eps_fp_rate": 0.7,
+    "p_avg_at_matching_fp": {
+      "threshold": 0.05,
+      "detection": 13,
+      "det_rate": 0.65,
+      "fp": 1,
+      "fp_rate": 0.1
+    },
+    "sweep": [
+      {
+        "threshold": 0.05,
+        "detection": 13,
+        "n_high": 20,
+        "det_rate": 0.65,
+        "fp": 1,
+        "n_low": 10,
+        "fp_rate": 0.1
+      },
+      {
+        "threshold": 0.1,
+        "detection": 4,
+        "n_high": 20,
+        "det_rate": 0.2,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.15,
+        "detection": 2,
+        "n_high": 20,
+        "det_rate": 0.1,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.2,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.25,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.3,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.4,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.5,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 0.75,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "detection": 0,
+        "n_high": 20,
+        "det_rate": 0.0,
+        "fp": 0,
+        "n_low": 10,
+        "fp_rate": 0.0
+      }
+    ]
+  }
+}

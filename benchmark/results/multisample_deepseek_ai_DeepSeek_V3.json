@@ -1,0 +1,713 @@
+{
+  "timestamp": "2026-04-22T14:46:54",
+  "model": "deepseek-ai/DeepSeek-V3",
+  "provider": "together",
+  "n_samples": 5,
+  "temperature": 0.7,
+  "results": [
+    {
+      "id": "low_01",
+      "label": "Sort integers",
+      "category": "LOW",
+      "prompt": "Write a Python function that takes a list of integers and returns it sorted in a",
+      "choices": [
+        "builtin_sorted",
+        "builtin_sorted",
+        "builtin_sorted",
+        "builtin_sorted",
+        "builtin_sorted"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def sort_integers(lst):\n    return sorted(lst)",
+        "def sort_integers(lst):\n    return sorted(lst)",
+        "```python\ndef sort_list(lst):\n    return sorted(lst)\n```",
+        "```python\ndef sort_integers(lst):\n    return sorted(lst)\n```",
+        "def sort_list(lst):\n    return sorted(lst)"
+      ]
+    },
+    {
+      "id": "low_02",
+      "label": "Palindrome check",
+      "category": "LOW",
+      "prompt": "Write a Python function that returns True if a given string is a palindrome, Fal",
+      "choices": [
+        "slice",
+        "slice",
+        "slice",
+        "slice",
+        "slice"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def is_palindrome(s):\n    normalized = s.lower()\n    return normalized == normalized[::-1]",
+        "```python\ndef is_palindrome(s):\n    s = s.lower()\n    return s == s[::-1]\n```",
+        "def is_palindrome(s):\n    normalized = s.lower().replace(' ', '')\n    return normalized == normalized[::-1]",
+        "```python\ndef is_palindrome(s):\n    normalized = ''.join(char.lower() for char in s if char.isalnum())\n    return normalized == normalized[::-1]\n```",
+        "```python\ndef is_palindrome(s):\n    s = s.lower()\n    return s == s[::-1]\n```"
+      ]
+    },
+    {
+      "id": "low_03",
+      "label": "Fibonacci (nth)",
+      "category": "LOW",
+      "prompt": "Write a Python function that returns the nth Fibonacci number. n is a non-negati",
+      "choices": [
+        "iterative",
+        "iterative",
+        "iterative",
+        "iterative",
+        "iterative"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def fibonacci(n):\n    if n == 0:\n        return 0\n    elif n == 1:\n        return 1\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b",
+        "def fibonacci(n):\n    if n == 0:\n        return 0\n    elif n == 1:\n        return 1\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b",
+        "def fibonacci(n):\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b",
+        "```python\ndef fibonacci(n):\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    r",
+        "```python\ndef fibonacci(n):\n    if n <= 1:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b\n```"
+      ]
+    },
+    {
+      "id": "low_04",
+      "label": "List maximum",
+      "category": "LOW",
+      "prompt": "Write a Python function that returns the maximum value in a list of numbers with",
+      "choices": [
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def find_max(numbers):\n    if not numbers:\n        return None\n    max_val = numbers[0]\n    for num in numbers[1:]:\n        if num > max_val:\n            max_val = num\n    return max_val",
+        "def find_max(numbers):\n    if not numbers:\n        return None\n    max_val = numbers[0]\n    for num in numbers:\n        if num > max_val:\n            max_val = num\n    return max_val",
+        "def find_max(numbers):\n    if not numbers:\n        return None\n    max_val = numbers[0]\n    for num in numbers[1:]:\n        if num > max_val:\n            max_val = num\n    return max_val",
+        "```python\ndef find_max_value(lst):\n    if not lst:\n        return None\n    max_val = lst[0]\n    for num in lst:\n        if num > max_val:\n            max_val = num\n    return max_val\n```",
+        "def find_max(lst):\n    max_val = lst[0]\n    for num in lst[1:]:\n        if num > max_val:\n            max_val = num\n    return max_val"
+      ]
+    },
+    {
+      "id": "low_05",
+      "label": "Word frequency",
+      "category": "LOW",
+      "prompt": "Write a Python function that takes a string and returns a dictionary mapping eac",
+      "choices": [
+        "dict_loop",
+        "dict_loop",
+        "dict_loop",
+        "dict_loop",
+        "dict_loop"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "```python\ndef count_word_frequency(s):\n    words = s.split()\n    freq = {}\n    for word in words:\n        freq[word] = freq.get(word, 0) + 1\n    return freq\n```",
+        "```python\ndef count_word_frequency(s):\n    words = s.split()\n    freq = {}\n    for word in words:\n        freq[word] = freq.get(word, 0) + 1\n    return freq\n```",
+        "def word_frequency(s):\n    words = s.split()\n    freq = {}\n    for word in words:\n        freq[word] = freq.get(word, 0) + 1\n    return freq",
+        "def word_frequency(s):\n    words = s.split()\n    freq = {}\n    for word in words:\n        freq[word] = freq.get(word, 0) + 1\n    return freq",
+        "import re\nfrom collections import defaultdict\n\ndef count_word_frequencies(text):\n    words = re.findall(r'\\b\\w+\\b', text.lower())\n    freq = defaultdict(int)\n    for word in words:\n        freq[word] "
+      ]
+    },
+    {
+      "id": "low_06",
+      "label": "Prime check",
+      "category": "LOW",
+      "prompt": "Write a Python function that returns True if a given integer is prime, False oth",
+      "choices": [
+        "trial_division",
+        "trial_division",
+        "trial_division",
+        "trial_division",
+        "trial_division"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i",
+        "```python\ndef is_prime(n):\n    if n < 2:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n**0.5) + 1, 2):\n        if n % i == ",
+        "def is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n",
+        "```python\ndef is_prime(n):\n    if n < 2:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n ** 0.5) + 1, 2):\n        if n % i =",
+        "def is_prime(n):\n    if n < 2:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n**0.5) + 1, 2):\n        if n % i == 0:\n       "
+      ]
+    },
+    {
+      "id": "low_07",
+      "label": "Celsius to Fahrenheit",
+      "category": "LOW",
+      "prompt": "Write a Python function that converts a temperature in Celsius to Fahrenheit.",
+      "choices": [
+        "formula",
+        "formula",
+        "formula",
+        "unknown",
+        "formula"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "def convert_celsius_to_fahrenheit(celsius):\n    return celsius * 9/5 + 32",
+        "```python\ndef convert_celsius_to_fahrenheit(celsius):\n    return celsius * 9 / 5 + 32\n```",
+        "def celsius_to_fahrenheit(celsius):\n    return celsius * 9/5 + 32",
+        "def celsius_to_fahrenheit(celsius):\n    return (celsius * 9/5) + 32",
+        "```python\ndef convert_celsius_to_fahrenheit(celsius):\n    return celsius * 9/5 + 32\n```"
+      ]
+    },
+    {
+      "id": "low_08",
+      "label": "Deduplicate list",
+      "category": "LOW",
+      "prompt": "Write a Python function that removes duplicates from a list while preserving the",
+      "choices": [
+        "seen_set",
+        "seen_set",
+        "seen_set",
+        "seen_set",
+        "seen_set"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def remove_duplicates(lst):\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result",
+        "def remove_duplicates(lst):\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result",
+        "def remove_duplicates(lst):\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result",
+        "def remove_duplicates(lst):\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result",
+        "def remove_duplicates(lst):\n    seen = set()\n    result = []\n    for item in lst:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result"
+      ]
+    },
+    {
+      "id": "low_09",
+      "label": "Flatten one level",
+      "category": "LOW",
+      "prompt": "Write a Python function that flattens a list of lists by one level and returns t",
+      "choices": [
+        "comprehension",
+        "comprehension",
+        "comprehension",
+        "comprehension",
+        "extend_loop"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "def flatten_list(lst):\n    return [item for sublist in lst for item in sublist]",
+        "```python\ndef flatten_list(lst):\n    return [item for sublist in lst for item in sublist]\n```",
+        "def flatten_list(lst):\n    return [item for sublist in lst for item in sublist]",
+        "```python\ndef flatten_list(lst):\n    return [item for sublist in lst for item in sublist]\n```",
+        "def flatten_list(lst):\n    result = []\n    for sublist in lst:\n        result.extend(sublist)\n    return result"
+      ]
+    },
+    {
+      "id": "low_10",
+      "label": "Binary search",
+      "category": "LOW",
+      "prompt": "Write a Python function that performs binary search on a sorted list and returns",
+      "choices": [
+        "iterative",
+        "iterative",
+        "iterative",
+        "recursive",
+        "iterative"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "```python\ndef binary_search(lst, target):\n    low = 0\n    high = len(lst) - 1\n    \n    while low <= high:\n        mid = (low + high) // 2\n        if lst[mid] == target:\n            return mid\n        ",
+        "def binary_search(lst, target):\n    low = 0\n    high = len(lst) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if lst[mid] == target:\n            return mid\n        elif lst[mid] <",
+        "```python\ndef binary_search(lst, target):\n    low = 0\n    high = len(lst) - 1\n    \n    while low <= high:\n        mid = (low + high) // 2\n        if lst[mid] == target:\n            return mid\n        ",
+        "```python\ndef binary_search(lst, target):\n    left, right = 0, len(lst) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if lst[mid] == target:\n            return mid\n        eli",
+        "def binary_search(lst, target):\n    low = 0\n    high = len(lst) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if lst[mid] == target:\n            return mid\n        elif lst[mid] <"
+      ]
+    },
+    {
+      "id": "high_01",
+      "label": "Stripe payment (Scenario A)",
+      "category": "HIGH",
+      "prompt": "Write a Python function to charge a customer's card for $50 using the Stripe Pyt",
+      "choices": [
+        "PaymentIntent",
+        "Charge",
+        "PaymentIntent",
+        "PaymentIntent",
+        "PaymentIntent"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "from stripe import StripeClient\nfrom fastapi import HTTPException\n\ndef charge_customer(customer_id: str):\n    try:\n        client = StripeClient()\n        payment_intent = client.PaymentIntent.create(",
+        "import stripe\nfrom fastapi import HTTPException\n\ndef charge_customer_card(customer_id: str) -> stripe.Charge:\n    try:\n        charge = stripe.Charge.create(\n            amount=5000,\n            curre",
+        "from fastapi import HTTPException\nimport stripe\n\nstripe.api_key = \"your_stripe_secret_key\"\n\nasync def charge_customer(customer_id: str):\n    try:\n        intent = stripe.PaymentIntent.create(\n        ",
+        "from fastapi import HTTPException\nimport stripe\n\nstripe.api_key = \"your_stripe_secret_key\"\n\nasync def charge_customer(customer_id: str):\n    try:\n        payment_intent = stripe.PaymentIntent.create(\n",
+        "```python\nimport stripe\nfrom fastapi import HTTPException\n\ndef charge_customer(customer_id: str):\n    try:\n        intent = stripe.PaymentIntent.create(\n            amount=5000,\n            currency='"
+      ]
+    },
+    {
+      "id": "high_02",
+      "label": "OpenAI SDK call (Scenario B)",
+      "category": "HIGH",
+      "prompt": "Write a Python function that calls GPT-4 with a user message and returns the res",
+      "choices": [
+        "sdk_v0",
+        "sdk_v0",
+        "sdk_v0",
+        "sdk_v0",
+        "sdk_v1"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "import openai\n\ndef call_gpt4(user_message):\n    response = openai.ChatCompletion.create(\n        model=\"gpt-4\",\n        messages=[{\"role\": \"user\", \"content\": user_message}]\n    )\n    return response.c",
+        "import openai\n\ndef call_gpt4(user_message):\n    response = openai.ChatCompletion.create(\n        model=\"gpt-4\",\n        messages=[\n            {\"role\": \"user\", \"content\": user_message}\n        ]\n    )",
+        "import openai\n\ndef query_gpt4(user_message):\n    response = openai.ChatCompletion.create(\n        model=\"gpt-4\",\n        messages=[{\"role\": \"user\", \"content\": user_message}]\n    )\n    return response.",
+        "import openai\n\ndef call_gpt4(user_message):\n    response = openai.ChatCompletion.create(\n        model=\"gpt-4\",\n        messages=[\n            {\"role\": \"user\", \"content\": user_message}\n        ]\n    )",
+        "from openai import OpenAI\n\ndef generate_response(user_message):\n    client = OpenAI()\n    response = client.chat.completions.create(\n        model=\"gpt-4\",\n        messages=[\n            {\"role\": \"use"
+      ]
+    },
+    {
+      "id": "high_03",
+      "label": "SQLAlchemy query (Scenario C)",
+      "category": "HIGH",
+      "prompt": "Write a Python function that queries all active users from a SQLAlchemy database",
+      "choices": [
+        "v1_query",
+        "v1_query",
+        "v1_query",
+        "v1_query",
+        "v1_query"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "from sqlalchemy.orm import Session\n\ndef get_active_users(session: Session) -> list:\n    from models import User\n    return session.query(User).filter(User.is_active == True).all()",
+        "```python\nfrom sqlalchemy.orm import Session\nfrom models import User\n\ndef get_active_users(session: Session) -> list:\n    return session.query(User).filter(User.active == True).all()\n```",
+        "\n```python\nfrom sqlalchemy.orm import Session\n\ndef get_active_users(session: Session) -> list:\n    from models import User\n    return session.query(User).filter(User.active == True).all()\n```",
+        "```python\nfrom sqlalchemy.orm import Session\nfrom typing import List\nfrom models import User\n\ndef get_active_users(session: Session) -> List[User]:\n    return session.query(User).filter(User.is_active",
+        "from sqlalchemy.orm import Session\n\ndef get_active_users(session: Session) -> list:\n    from models import User\n    return session.query(User).filter(User.is_active == True).all()"
+      ]
+    },
+    {
+      "id": "high_04",
+      "label": "FastAPI async HTTP (Scenario D)",
+      "category": "HIGH",
+      "prompt": "Write a FastAPI endpoint that accepts a city name as a query parameter, fetches ",
+      "choices": [
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "from fastapi import FastAPI, HTTPException\nimport requests\n\napp = FastAPI()\n\n@app.get(\"/weather\")\nasync def get_weather(city: str):\n    api_key = \"YOUR_API_KEY\"\n    url = f\"http://api.weatherapi.com/v",
+        "from fastapi import FastAPI, HTTPException\nimport requests\n\napp = FastAPI()\n\n@app.get(\"/weather\")\nasync def get_weather(city: str):\n    api_key = \"YOUR_API_KEY\"\n    base_url = \"http://api.weatherapi.c",
+        "import requests\nfrom fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass WeatherResponse(BaseModel):\n    city: str\n    temperature: float\n    description: str\n",
+        "from fastapi import FastAPI, HTTPException\nimport requests\n\napp = FastAPI()\n\n@app.get(\"/weather\")\nasync def get_weather(city: str):\n    api_key = \"YOUR_API_KEY\"\n    url = f\"http://api.openweathermap.o",
+        "from fastapi import FastAPI, HTTPException\nimport requests\n\napp = FastAPI()\n\n@app.get(\"/weather\")\nasync def get_weather(city: str):\n    api_key = \"YOUR_API_KEY\"\n    url = f\"http://api.openweathermap.o"
+      ]
+    },
+    {
+      "id": "high_05",
+      "label": "Password hashing",
+      "category": "HIGH",
+      "prompt": "Write a Python function that securely hashes a password for storage in a databas",
+      "choices": [
+        "hashlib",
+        "hashlib",
+        "hashlib",
+        "hashlib",
+        "hashlib"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import hashlib\nimport os\nimport base64\n\ndef hash_password(password):\n    salt = os.urandom(32)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)\n    return base64.b64enco",
+        "import hashlib\nimport secrets\nimport base64\n\ndef hash_password(password: str) -> str:\n    salt = secrets.token_bytes(16)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)\n    re",
+        "import hashlib\nimport secrets\n\ndef hash_password(password: str) -> str:\n    salt = secrets.token_hex(16)\n    hashed = hashlib.sha256((salt + password).encode()).hexdigest()\n    return f\"{salt}:{hashed",
+        "import hashlib\nimport os\nimport hmac\n\ndef hash_password(password):\n    salt = os.urandom(16)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)\n    return salt + key\n\ndef verify_",
+        "import hashlib\nimport os\nimport base64\nfrom hmac import compare_digest\n\ndef hash_password(password):\n    salt = os.urandom(32)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)\n"
+      ]
+    },
+    {
+      "id": "high_06",
+      "label": "JWT token creation",
+      "category": "HIGH",
+      "prompt": "Write a Python function that creates a signed JWT token for a user containing th",
+      "choices": [
+        "pyjwt",
+        "pyjwt",
+        "pyjwt",
+        "pyjwt",
+        "pyjwt"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import jwt\nimport datetime\nimport os\n\ndef create_token(user_id):\n    secret = os.environ.get('JWT_SECRET')\n    if not secret:\n        raise ValueError(\"JWT_SECRET environment variable not set\")\n    pa",
+        "import jwt\nimport datetime\n\ndef create_jwt_token(user_id, secret_key):\n    payload = {\n        'user_id': user_id,\n        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)\n    }\n    ret",
+        "import jwt\nimport datetime\n\ndef create_jwt_token(user_id, secret_key):\n    payload = {\n        'user_id': user_id,\n        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)\n    }\n    ret",
+        "import jwt\nimport datetime\n\ndef create_jwt_token(user_id, secret_key):\n    payload = {\n        'user_id': user_id,\n        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)\n    }\n    ret",
+        "import jwt\nimport datetime\n\ndef create_signed_token(user_id, secret_key):\n    payload = {\n        'user_id': user_id,\n        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)\n    }\n    "
+      ]
+    },
+    {
+      "id": "high_07",
+      "label": "Current UTC datetime",
+      "category": "HIGH",
+      "prompt": "Write a Python function that returns the current UTC time as a timezone-aware da",
+      "choices": [
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import datetime\n\ndef get_utc_now():\n    return datetime.datetime.now(datetime.timezone.utc)",
+        "from datetime import datetime, timezone\n\ndef get_current_utc_time():\n    return datetime.now(timezone.utc)",
+        "```python\nfrom datetime import datetime, timezone\n\ndef get_current_utc():\n    return datetime.now(timezone.utc)\n```",
+        "```python\nfrom datetime import datetime, timezone\n\ndef get_utc_now():\n    return datetime.now(timezone.utc)\n```",
+        "import datetime\n\ndef get_utc_datetime():\n    return datetime.datetime.now(datetime.timezone.utc)"
+      ]
+    },
+    {
+      "id": "high_08",
+      "label": "HTTP GET to JSON",
+      "category": "HIGH",
+      "prompt": "Write a Python function that makes an HTTP GET request to a given URL and return",
+      "choices": [
+        "urllib",
+        "requests",
+        "urllib",
+        "requests",
+        "requests"
+      ],
+      "diversity": 0.4,
+      "samples": [
+        "import json\nimport urllib.request\nfrom typing import Dict, Any\n\ndef fetch_json(url: str) -> Dict[str, Any]:\n    with urllib.request.urlopen(url) as response:\n        data = response.read().decode('utf",
+        "import requests\nimport json\n\ndef fetch_json(url):\n    response = requests.get(url)\n    response.raise_for_status()\n    return response.json()",
+        "import json\nimport urllib.request\n\ndef fetch_json(url):\n    with urllib.request.urlopen(url) as response:\n        data = response.read().decode('utf-8')\n        return json.loads(data)",
+        "import requests\nimport json\n\ndef fetch_json(url):\n    response = requests.get(url)\n    response.raise_for_status()\n    return response.json()",
+        "import requests\nimport json\n\ndef fetch_json(url):\n    response = requests.get(url)\n    response.raise_for_status()\n    return response.json()"
+      ]
+    },
+    {
+      "id": "high_09",
+      "label": "Redis cache get",
+      "category": "HIGH",
+      "prompt": "Write a Python function that retrieves a cached value from Redis by key, returni",
+      "choices": [
+        "redis_sync",
+        "redis_asyncio",
+        "redis_sync",
+        "redis_asyncio",
+        "redis_sync"
+      ],
+      "diversity": 0.4,
+      "samples": [
+        "import redis\n\nasync def get_cached_value(key: str) -> str | None:\n    r = redis.Redis()\n    return r.get(key)",
+        "import redis.asyncio as redis\n\nasync def get_cached_value(redis_client: redis.Redis, key: str) -> str | None:\n    return await redis_client.get(key)",
+        "import redis\n\nasync def get_cached_value(key: str) -> str | None:\n    r = redis.Redis()\n    return r.get(key)",
+        "import aioredis\n\nasync def get_cached_value(key: str) -> str | None:\n    redis = await aioredis.from_url(\"redis://localhost\")\n    value = await redis.get(key)\n    await redis.close()\n    return value.",
+        "```python\nimport redis\n\nasync def get_cached_value(key: str) -> str | None:\n    r = redis.Redis()\n    return r.get(key)\n```"
+      ]
+    },
+    {
+      "id": "high_10",
+      "label": "PostgreSQL query",
+      "category": "HIGH",
+      "prompt": "Write a Python function that connects to a PostgreSQL database and retrieves all",
+      "choices": [
+        "psycopg2",
+        "psycopg2",
+        "psycopg2",
+        "psycopg2",
+        "psycopg2"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import psycopg2\nfrom psycopg2 import sql\n\ndef fetch_users(db_host, db_port, db_name, db_user, db_password):\n    conn = psycopg2.connect(\n        host=db_host,\n        port=db_port,\n        dbname=db_n",
+        "import psycopg2\n\ndef fetch_users(host, database, user, password, port=5432):\n    conn = psycopg2.connect(\n        host=host,\n        database=database,\n        user=user,\n        password=password,\n  ",
+        "import psycopg2\n\ndef get_users(host, database, user, password, port=5432):\n    conn = psycopg2.connect(\n        host=host,\n        database=database,\n        user=user,\n        password=password,\n    ",
+        "import psycopg2\n\ndef get_users():\n    conn = psycopg2.connect(\n        host=\"localhost\",\n        database=\"mydatabase\",\n        user=\"myuser\",\n        password=\"mypassword\"\n    )\n    cursor = conn.cur",
+        "```python\nimport psycopg2\nfrom psycopg2 import sql\n\ndef fetch_users(host, database, user, password, port=5432):\n    conn = psycopg2.connect(\n        host=host,\n        database=database,\n        user="
+      ]
+    },
+    {
+      "id": "high_11",
+      "label": "Pydantic model serialization",
+      "category": "HIGH",
+      "prompt": "Write a Python function that takes a Pydantic model instance representing a user",
+      "choices": [
+        "dict_v1",
+        "dict_v1",
+        "dict_v1",
+        "dict_v1",
+        "dict_v1"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "def user_to_dict(user):\n    return user.dict()",
+        "from pydantic import BaseModel\n\ndef model_to_dict(model_instance: BaseModel) -> dict:\n    return model_instance.dict()",
+        "from pydantic import BaseModel\n\ndef user_to_dict(user: BaseModel) -> dict:\n    return user.dict()",
+        "def model_to_dict(model_instance):\n    return model_instance.dict()",
+        "from pydantic import BaseModel\n\ndef model_to_dict(user: BaseModel) -> dict:\n    return user.dict()"
+      ]
+    },
+    {
+      "id": "high_12",
+      "label": "pandas DataFrame concat",
+      "category": "HIGH",
+      "prompt": "Write a Python function that takes a list of pandas DataFrames and concatenates ",
+      "choices": [
+        "pd_concat",
+        "pd_concat",
+        "pd_concat",
+        "pd_concat",
+        "pd_concat"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "```python\nimport pandas as pd\n\ndef concatenate_dataframes(dataframes):\n    return pd.concat(dataframes, ignore_index=True).drop_duplicates()\n```",
+        "```python\nimport pandas as pd\n\ndef concatenate_dataframes(dataframes):\n    if not dataframes:\n        return pd.DataFrame()\n    return pd.concat(dataframes, ignore_index=True).drop_duplicates()\n```",
+        "```python\nimport pandas as pd\n\ndef concatenate_dataframes(df_list):\n    if not df_list:\n        return pd.DataFrame()\n    concatenated = pd.concat(df_list, ignore_index=True)\n    return concatenated.d",
+        "```python\ndef concatenate_dataframes(df_list):\n    if not df_list:\n        return pd.DataFrame()\n    combined = pd.concat(df_list, ignore_index=True)\n    return combined.drop_duplicates()\n```",
+        "```python\ndef concatenate_dataframes(dataframes):\n    return pd.concat(dataframes, ignore_index=True).drop_duplicates()\n```"
+      ]
+    },
+    {
+      "id": "high_13",
+      "label": "boto3 S3 upload",
+      "category": "HIGH",
+      "prompt": "Write a Python function that uploads a local file to an S3 bucket using boto3 an",
+      "choices": [
+        "upload_file",
+        "upload_file",
+        "upload_file",
+        "upload_file",
+        "upload_file"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import boto3\n\ndef upload_file_to_s3(local_file_path, bucket_name, s3_object_key):\n    s3_client = boto3.client('s3')\n    s3_client.upload_file(local_file_path, bucket_name, s3_object_key)\n    return s",
+        "import boto3\n\ndef upload_file_to_s3(local_file_path, bucket_name, s3_key=None):\n    if s3_key is None:\n        import os\n        s3_key = os.path.basename(local_file_path)\n    s3_client = boto3.client",
+        "import boto3\nfrom botocore.exceptions import ClientError\n\ndef upload_file_to_s3(local_file_path, bucket_name, s3_key):\n    s3_client = boto3.client('s3')\n    try:\n        s3_client.upload_file(local_f",
+        "import boto3\n\ndef upload_file_to_s3(local_file_path, bucket_name, s3_key):\n    s3_client = boto3.client('s3')\n    s3_client.upload_file(local_file_path, bucket_name, s3_key)\n    return s3_key",
+        "import boto3\n\ndef upload_file_to_s3(local_file_path, bucket_name, s3_key=None):\n    s3 = boto3.client('s3')\n    if s3_key is None:\n        s3_key = local_file_path.split('/')[-1]\n    s3.upload_file(lo"
+      ]
+    },
+    {
+      "id": "high_14",
+      "label": "Celery async task",
+      "category": "HIGH",
+      "prompt": "Write a Celery task that sends a welcome email to a new user. The task should ac",
+      "choices": [
+        "shared_task",
+        "shared_task",
+        "shared_task",
+        "shared_task",
+        "shared_task"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "from celery import shared_task\nfrom django.core.mail import send_mail\nfrom django.contrib.auth.models import User\n\n@shared_task\ndef send_welcome_email(user_id, email):\n    subject = 'Welcome to our si",
+        "from celery import shared_task\nfrom django.core.mail import send_mail\nfrom django.contrib.auth.models import User\n\n@shared_task\ndef send_welcome_email(user_id, email):\n    subject = 'Welcome to Our Si",
+        "from django.core.mail import send_mail\nfrom celery import shared_task\n\n@shared_task\ndef send_welcome_email(user_id, email_address):\n    subject = 'Welcome to Our Platform'\n    message = f'Hello User {",
+        "from celery import shared_task\nfrom django.core.mail import send_mail\nfrom django.contrib.auth.models import User\n\n@shared_task\ndef send_welcome_email(user_id, email):\n    subject = 'Welcome to Our Si",
+        "from celery import shared_task\nfrom django.core.mail import send_mail\nfrom django.contrib.auth.models import User\n\n@shared_task\ndef send_welcome_email(user_id, email):\n    subject = 'Welcome to Our Si"
+      ]
+    },
+    {
+      "id": "high_15",
+      "label": "Token expiry datetime",
+      "category": "HIGH",
+      "prompt": "Write a Python function that returns a datetime object representing 24 hours fro",
+      "choices": [
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware",
+        "timezone_aware"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "import datetime\n\ndef get_token_expiration():\n    return datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=24)",
+        "```python\nfrom datetime import datetime, timedelta, timezone\n\ndef generate_token_expiration():\n    return datetime.now(timezone.utc) + timedelta(hours=24)\n```",
+        "```python\nfrom datetime import datetime, timedelta, timezone\n\ndef generate_token_expiration():\n    return datetime.now(timezone.utc) + timedelta(hours=24)\n```",
+        "```python\nfrom datetime import datetime, timedelta, timezone\n\ndef generate_token_expiration():\n    return datetime.now(timezone.utc) + timedelta(hours=24)\n```",
+        "```python\nfrom datetime import datetime, timedelta\n\ndef get_expiration_time():\n    return datetime.utcnow() + timedelta(hours=24)\n```"
+      ]
+    },
+    {
+      "id": "high_16",
+      "label": "Pillow image resize",
+      "category": "HIGH",
+      "prompt": "Write a Python function that resizes an image to a maximum width of 800 pixels w",
+      "choices": [
+        "lanczos_old",
+        "lanczos_old",
+        "lanczos_old",
+        "lanczos_old",
+        "lanczos_old"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "from PIL import Image\n\ndef resize_image_max_width(image_path, output_path, max_width=800):\n    with Image.open(image_path) as img:\n        width, height = img.size\n        if width > max_width:\n      ",
+        "from PIL import Image\n\ndef resize_image_max_width(image_path, output_path, max_width=800):\n    with Image.open(image_path) as img:\n        width, height = img.size\n        if width <= max_width:\n     ",
+        "from PIL import Image\n\ndef resize_image_max_width(image_path, output_path):\n    with Image.open(image_path) as img:\n        if img.width <= 800:\n            img.save(output_path)\n            return\n  ",
+        "from PIL import Image\n\ndef resize_image(image_path, output_path=None):\n    if output_path is None:\n        output_path = image_path\n    with Image.open(image_path) as img:\n        max_width = 800\n    ",
+        "from PIL import Image\nimport os\n\ndef resize_image_max_width(input_path, output_path, max_width=800):\n    with Image.open(input_path) as img:\n        width, height = img.size\n        if width <= max_wi"
+      ]
+    },
+    {
+      "id": "high_17",
+      "label": "Django REST list view",
+      "category": "HIGH",
+      "prompt": "Write a Django REST Framework view that returns a paginated list of all active P",
+      "choices": [
+        "list_api_view",
+        "list_api_view",
+        "list_api_view",
+        "list_api_view",
+        "list_api_view"
+      ],
+      "diversity": 0.0,
+      "samples": [
+        "from rest_framework import generics\nfrom rest_framework.pagination import PageNumberPagination\nfrom django_filters.rest_framework import DjangoFilterBackend\n\nclass ProductPagination(PageNumberPaginati",
+        "from rest_framework import generics\nfrom django_filters.rest_framework import DjangoFilterBackend\nfrom .models import Product\nfrom .serializers import ProductSerializer\n\nclass ProductListView(generics",
+        "from rest_framework import generics\nfrom rest_framework.pagination import PageNumberPagination\nfrom django_filters.rest_framework import DjangoFilterBackend\n\nclass ProductPagination(PageNumberPaginati",
+        "from rest_framework import generics\nfrom django_filters.rest_framework import DjangoFilterBackend\nfrom .models import Product\nfrom .serializers import ProductSerializer\n\nclass ProductListView(generics",
+        "from rest_framework import generics\nfrom django_filters.rest_framework import DjangoFilterBackend\nfrom .models import Product\nfrom .serializers import ProductSerializer\n\nclass ProductListView(generics"
+      ]
+    },
+    {
+      "id": "high_18",
+      "label": "Async HTTP GET request",
+      "category": "HIGH",
+      "prompt": "Write an async Python function that makes an HTTP GET request to a given URL and",
+      "choices": [
+        "aiohttp",
+        "aiohttp",
+        "aiohttp",
+        "httpx",
+        "aiohttp"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "import aiohttp\nimport json\n\nasync def fetch_json(url):\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            response.raise_for_status()\n     ",
+        "import aiohttp\nimport asyncio\nfrom typing import Dict, Any\n\nasync def fetch_json(url: str) -> Dict[str, Any]:\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as ",
+        "import aiohttp\nimport json\nfrom typing import Dict, Any\n\nasync def fetch_json(url: str) -> Dict[str, Any]:\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as res",
+        "import httpx\n\nasync def fetch_json(url: str) -> dict:\n    async with httpx.AsyncClient() as client:\n        response = await client.get(url)\n        response.raise_for_status()\n        return response",
+        "import aiohttp\nimport json\n\nasync def fetch_json(url):\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            response.raise_for_status()\n     "
+      ]
+    },
+    {
+      "id": "high_19",
+      "label": "Schema validation",
+      "category": "HIGH",
+      "prompt": "Write a Python function that validates and deserializes incoming JSON request da",
+      "choices": [
+        "manual",
+        "manual",
+        "manual",
+        "unknown",
+        "manual"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "import json\nfrom flask import request, jsonify\n\ndef validate_user_registration():\n    data = request.get_json()\n    if not data:\n        return jsonify({'error': 'Invalid JSON'}), 400\n    \n    require",
+        "from flask import request, jsonify\nimport re\n\ndef validate_user_registration():\n    data = request.get_json()\n    if not data:\n        return jsonify({\"error\": \"No JSON data provided\"}), 400\n        \n",
+        "```python\nfrom flask import request, jsonify\n\ndef validate_user_registration():\n    data = request.get_json()\n    if not data:\n        return jsonify({'error': 'Invalid JSON'}), 400\n\n    required_fiel",
+        "\n```python\nfrom flask import request, jsonify\nimport re\n\ndef validate_registration_data():\n    data = request.get_json()\n    if not data:\n        return None, jsonify({'error': 'Invalid JSON'}), 400\n ",
+        "```python\nfrom flask import request, jsonify\n\ndef validate_user_registration():\n    data = request.get_json()\n    if not data:\n        return jsonify({'error': 'No JSON data provided'}), 400\n    \n    "
+      ]
+    },
+    {
+      "id": "high_20",
+      "label": "Parametrized test",
+      "category": "HIGH",
+      "prompt": "Write a parametrized test for a function that converts temperatures between Cels",
+      "choices": [
+        "pytest_parametrize",
+        "unittest",
+        "pytest_parametrize",
+        "pytest_parametrize",
+        "pytest_parametrize"
+      ],
+      "diversity": 0.2,
+      "samples": [
+        "import pytest\n\ndef test_temperature_conversion(test_input, expected):\n    from temperature_utils import convert_temperature\n    assert convert_temperature(test_input[0], test_input[1]) == expected\n\n@p",
+        "import unittest\nfrom parameterized import parameterized\n\ndef test_temperature_conversion(self, celsius, fahrenheit):\n    from your_module import convert_temperature  # Replace with actual import\n    s",
+        "import pytest\nimport temp_converter\n\n@pytest.mark.parametrize(\"input_temp, expected_output, from_unit, to_unit\", [\n    (0, 32, 'celsius', 'fahrenheit'),\n    (100, 212, 'celsius', 'fahrenheit'),\n    (3",
+        "import pytest\n\ndef test_convert_temperature():\n    pass\n\n@pytest.mark.parametrize(\"celsius,fahrenheit\", [\n    (0, 32),\n    (100, 212),\n    (37, 98.6),\n    (-40, -40),\n    (25, 77)\n])\ndef test_convert_",
+        "import pytest\n\ndef celsius_to_fahrenheit(celsius):\n    return (celsius * 9/5) + 32\n\ndef fahrenheit_to_celsius(fahrenheit):\n    return (fahrenheit - 32) * 5/9\n\n@pytest.mark.parametrize(\"celsius, fahren"
+      ]
+    }
+  ],
+  "sweep": [
+    {
+      "threshold": 0.0,
+      "detection": 7,
+      "n_high": 20,
+      "det_rate": 0.35,
+      "fp": 3,
+      "n_low": 10,
+      "fp_rate": 0.3
+    },
+    {
+      "threshold": 0.1,
+      "detection": 7,
+      "n_high": 20,
+      "det_rate": 0.35,
+      "fp": 3,
+      "n_low": 10,
+      "fp_rate": 0.3
+    },
+    {
+      "threshold": 0.2,
+      "detection": 2,
+      "n_high": 20,
+      "det_rate": 0.1,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    },
+    {
+      "threshold": 0.3,
+      "detection": 2,
+      "n_high": 20,
+      "det_rate": 0.1,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    },
+    {
+      "threshold": 0.4,
+      "detection": 0,
+      "n_high": 20,
+      "det_rate": 0.0,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    },
+    {
+      "threshold": 0.5,
+      "detection": 0,
+      "n_high": 20,
+      "det_rate": 0.0,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    },
+    {
+      "threshold": 0.6,
+      "detection": 0,
+      "n_high": 20,
+      "det_rate": 0.0,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "detection": 0,
+      "n_high": 20,
+      "det_rate": 0.0,
+      "fp": 0,
+      "n_low": 10,
+      "fp_rate": 0.0
+    }
+  ]
+}

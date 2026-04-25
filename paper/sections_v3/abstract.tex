@@ -1,0 +1,38 @@
+Large language models generate code that looks uniformly confident. A correct
+call to \texttt{stripe.PaymentIntent.create()} and a deprecated call to
+\texttt{stripe.Charge.create()} are emitted with the same surface tone, even
+when the underlying token distribution is a near-50/50 split (probability
+$0.52$ vs.\ $0.47$). Code-generation uncertainty is primarily \emph{intra-generational}: visible
+in the token distribution at generation time, invisible once tokens are
+committed. Multi-sample methods, which detect inter-generational
+inconsistency, therefore produce almost no signal on code tasks, achieving at
+most $35\%$ detection on our benchmark at comparable false-positive rates,
+versus $70$--$85\%$ for \eps.
+
+We introduce \eps, a per-token normalized Shannon entropy computed from the
+top-$k$ log-probabilities returned by the generation API, aggregated over the
+semantic tokens of a function via AST filtering and max-pooling. \eps is
+designed as a \emph{recall-maximizing filter}, not a detector. On a
+30-prompt calibration benchmark across GPT-4o, GPT-4o-mini, GPT-4-turbo, and
+DeepSeek V3, \eps at the \textsc{flagged} threshold ($\eps \ge 0.30$)
+achieves recall $=1.00$ on true failures with precision $=0.272$ on the
+evaluated 200-entry set. We compare against two alternatives at the same
+$1\times$ API cost: the sequence-level mean token probability (\papg,
+following Spiess et al.~\cite{spiess2025calibration}), which is competitive
+on raw detection ($65$--$90\%$) but offers no token-level attribution; and
+black-box multi-sample methods including UQLM, which detect $10$--$35\%$ of
+version-split API failures at $5\times$ cost. A \texttt{min\_logprob}
+baseline achieves $45$--$55\%$ where \eps achieves $70$--$85\%$.
+
+The low stage-1 precision is the design. We pair the filter with a parallel
+LLM review loop that reclassifies each flagged entry as \textsc{cleared} or
+\textsc{confirmed}. On 201 production and scenario entries across three
+models (GPT-4o, GPT-4o-mini, DeepSeek V3), a variant that injects model-specific learned false-positive
+patterns into the reviewer clears $68.7\%$ of flagged entries with zero
+late false positives, lifting end-to-end precision above $94\%$ (Wilson
+lower bound, $n=57$). The contribution is the system: a recall-maximizing
+filter verified against zero observed misses on the evaluated set, paired
+with a reviewer that keeps up with machine-speed code generation, plus the
+first direct three-way empirical comparison of intra-generational,
+sequence-level, and inter-generational uncertainty signals on
+production-realistic code prompts.

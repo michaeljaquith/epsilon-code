@@ -1,0 +1,43 @@
+Large language models generate code that looks uniformly confident. A
+correct call to \texttt{stripe.PaymentIntent.create()} and a deprecated
+call to \texttt{stripe.Charge.create()} are emitted with the same
+surface tone, even when the underlying token distribution is a near-%
+50/50 split ($P=0.52$ vs.\ $0.47$). Code-generation uncertainty is
+primarily \emph{intra-generational}: visible in the token distribution
+at generation time, invisible once tokens are committed. Sequence-level
+confidence signals --- most notably the mean token probability \papg
+of Spiess et al.~\cite{spiess2025calibration} --- read the same
+logprobs but aggregate them into one number per function; multi-sample
+methods measure output disagreement that simply does not occur for
+peaked code-token distributions, detecting at most $35\%$ of HIGH-risk
+prompts on our benchmark at $5\times$ cost.
+
+We introduce \eps, a per-token normalized Shannon entropy computed from
+the top-$k$ log-probabilities returned by the generation API,
+AST-filtered to semantic tokens and max-pooled per function. At the
+function level \eps is a recall-maximizing filter: on four models it
+flags $97.1\%$ of HIGH API-integration prompts, with recall $=1.00$ and
+precision $=0.272$ on a 200-entry evaluated set. The contribution is
+not the function-level flag. The contribution is that the same score
+localizes: of the $\sim 98$ tokens in a typical flagged function, only
+$10.5\%$ exceed the flag threshold and only $1.5\%$ exceed the paused
+threshold. \eps narrows the developer's review surface from a whole
+function to an average of $10.4$ tokens at the flag threshold and
+$1.5$ tokens at the paused threshold --- a $89$--$98.5\%$ reduction in
+within-function review burden. This is the distinguishing claim.
+\papg, at the same $1\times$ API cost, is competitive on raw detection
+($65$--$90\%$ vs.\ \eps's $70$--$85\%$ across four models) and in fact
+beats \eps on two of four OpenAI models; what it cannot do is say
+\emph{where in the function} to look. \eps answers both.
+
+The low function-level precision is the design. We pair the filter
+with a parallel LLM review loop that reclassifies each flagged entry
+as \textsc{cleared} or \textsc{confirmed}, using \eps's token-level
+attribution to direct the reviewer to the specific $1$--$2$ tokens
+that drove the score. On 201 entries across three models, a
+context-primed reviewer clears $68.7\%$ of flagged entries with zero
+late false positives. The contribution is the two-level view:
+function-level recall plus token-level localization, together with
+the first direct three-way empirical comparison of intra-generational,
+sequence-level, and inter-generational uncertainty signals on
+production-realistic code prompts.
