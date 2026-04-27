@@ -134,8 +134,9 @@ Residual (Type 3 only)                             & $50\%$ \\
 \caption{Successive filtering stages on $10$ \textsc{low} prompts.
 Naming-convention prompt and AST filter are partially overlapping;
 without the prompt, AST filtering alone drops FP from $90\%$ to
-$70\%$. Residual $50\%$ is Type 3, rare in production API-integration
-code.}
+$70\%$. Residual $50\%$ is Type 3; the fraction of Type 3 fires
+in production API-integration code depends on how constrained
+the function's algorithm space is.}
 \label{tab:filtering}
 \end{table}
 

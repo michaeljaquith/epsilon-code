@@ -52,16 +52,14 @@ analysis aggregates $144$ entries (four models, $30$ prompts with
 some drop-outs) and should be read as characterising order of
 magnitude rather than a precise percentage.
 
-\paragraph{\papg comparison scope.} The \papg evaluation uses the
-calibration benchmark ($30$ prompts per model, $120$ total) and has
-not been extended to the $201$-entry production-plus-scenario set
-used for the review-loop results. Whether \papg's function-level
-competitiveness translates to a working review loop when the
-reviewer is not given token attribution is an open question. A
-natural experiment would run the same review loop twice, once with
-\eps-routed token targets and once with \papg-routed whole-function
-review; we expect the former to be materially faster per entry and
-at least as precise, but have not run it.
+\paragraph{\papg comparison scope.} The signal-level \papg evaluation
+(\S\ref{subsec:papg-comp}) uses the calibration benchmark ($30$
+prompts per model, $120$ total). The end-to-end comparison through
+the review loop (\S\ref{subsec:papg-comp}, Table~\ref{tab:pavg-endtoend})
+uses the full $228$-entry production-plus-scenario set. The recall
+ceiling finding --- \papg's maximum API-entry recall is $44\%$ at
+any threshold --- rests on the production set and is not subject to
+the small-sample caveat that bounds the calibration results.
 
 \paragraph{Multi-sample sensitivity.} The multi-sample comparison
 uses $N=5$ at $T=0.7$. Higher $N$ or higher $T$ might recover
@@ -153,9 +151,4 @@ Scenario D's mismatches argue for AST-level consistency checks over
 \paragraph{Import-gated activation.}
 Restricting \eps scoring to functions that import external libraries
 would eliminate most of the Type 3 floor at negligible cost.
-
-\paragraph{Combined \papg $+$ \eps routing.}
-\papg's function-level specificity could be combined with \eps's
-token localization --- a two-signal gate that fires when both agree,
-with \eps supplying the token target for the reviewer.
 

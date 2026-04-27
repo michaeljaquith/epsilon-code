@@ -96,11 +96,58 @@ at the flag threshold.
 This is the distinguishing claim. It is not a higher rate; it is a
 different kind of output. \papg is a competitive function-level
 signal; \eps is a function-level signal plus a token-level attribution.
-Whether the attribution translates to better end-to-end precision in
-a \papg-routed review loop is an open empirical question --- the
-\papg baseline has not been extended to the full $201$-entry review-%
-loop evaluation --- but at the signal level the token-level output
-is strictly more informative at the same cost.
+We have now run the \papg baseline through the full review loop to
+measure whether that attribution gap produces a precision gap at the
+system level.
+
+\paragraph{\papg through the review loop.}
+We re-ran all six production and scenario result files with
+\texttt{mean\_logprob} captured, swept \papg thresholds to find the
+one whose API-entry recall best matches \eps's $93\%$, and ran the
+identical review loop without providing token attribution to the reviewer.
+The threshold sweep surfaces a structural constraint first: at every
+threshold, \papg's maximum recall on API entries is $44\%$ ($76/174$).
+Even at the most aggressive threshold, \texttt{mean\_logprob} stays
+near zero across production completions --- the model is globally
+confident, and averaging over the full token sequence absorbs the
+localized uncertainty that \eps reads at the decision token.
+
+At the matched threshold (\texttt{-mean\_logprob} $\ge 0.05$),
+\papg flags $99$ entries. Through the review loop, end-to-end
+precision is $50.5\%$ ($50/99$ confirmed true failures), compared
+to \eps's $94\%$ on $200$ entries. All $50$ suspect entries were
+confirmed by the consolidation pass ($0$ downgrades): the reviewer
+correctly identified issues when it found them, but cleared $49$
+genuine problems it could not localize to specific tokens.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Signal & Entries reviewed & API recall & End-to-end precision & True errors found \\
+\midrule
+\eps (cascaded)               & $200$ & $93\%$ ($162/174$) & $\mathbf{94\%}$ & ${\sim}188$ \\
+\papg (${\ge}0.05$ threshold) & $\phantom{0}99$ & $44\%$ ($\phantom{0}76/174$) & $50.5\%$ & $\phantom{{\sim}0}50$ \\
+\bottomrule
+\end{tabular}
+\caption{End-to-end comparison: \eps vs.\ \papg through the full review loop on the
+same 228-entry production-plus-scenario set (three models). \papg's recall ceiling is
+structural: \texttt{mean\_logprob} averages over all tokens including confident boilerplate,
+absorbing localized API-decision uncertainty. The precision gap ($43.5$pp) reflects the
+reviewer's inability to localize without token attribution; errors were confirmed when
+found but $49$ genuine failures were cleared because the reviewer had no token target to
+examine.}
+\label{tab:pavg-endtoend}
+\end{table}
+
+The signal-level conclusion from \S\ref{subsec:papg-comp} stands: at
+$1\times$ API cost, \papg is competitive with \eps on raw
+function-level detection for three of four OpenAI models. The
+system-level conclusion is different. Token attribution is not a
+refinement on top of the filter; it is the mechanism that enables
+$94\%$ end-to-end precision. Without it, the same review loop
+achieves $50.5\%$.
 
 \paragraph{\texttt{min\_logprob} as a sanity floor.}
 The older single-token \texttt{min\_logprob} baseline
@@ -247,3 +294,7 @@ token-level precision. The review loop in
 \S\ref{subsec:review-loop} is what turns the second answer into an
 end-to-end system: the reviewer is not asked to re-read $98$ tokens;
 it is asked to evaluate the high-\eps tokens \eps attributed.
+(iii) Through the review loop, the token-attribution gap becomes a
+precision gap: \eps achieves $94\%$ end-to-end precision;
+\papg-routed review, without token localization, achieves $50.5\%$
+on the same infrastructure (Table~\ref{tab:pavg-endtoend}).

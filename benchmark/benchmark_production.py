@@ -916,6 +916,9 @@ def run_benchmark(client: OpenAI, model: str, provider: str = "openai") -> list[
             results.append({**p, "error": str(e), "epsilon": None, "status": "ERROR"})
             continue
 
+        mean_logprob = (sum(t["logprob"] for t in token_data) / len(token_data)
+                        if token_data else None)
+
         eps, trigger = file_epsilon(token_data)
         status = eps_to_status(eps)
         fired = eps >= 0.30
@@ -960,6 +963,7 @@ def run_benchmark(client: OpenAI, model: str, provider: str = "openai") -> list[
         results.append({
             **{k: v for k, v in p.items()},
             "generated":        generated,
+            "mean_logprob":     round(mean_logprob, 4) if mean_logprob is not None else None,
             "epsilon":          round(eps, 4),
             "status":           status,
             "fired":            fired,

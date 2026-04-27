@@ -315,7 +315,10 @@ functions, combined with the token-level localization of
 tokens within those functions. \textsc{high} ground truth for
 $170/200$ entries is LLM-judged by GPT-4o
 (\S\ref{subsec:gt-disclosure}); \textsc{low} ground truth ($30/200$)
-is \texttt{exec()}-verified.}
+is \texttt{exec()}-verified.
+Recall $=1.000$ is an observed result on this set; the known false
+negative (GPT-4o-mini on SQLAlchemy, $\eps=0.000$) falls outside
+this evaluated set and is discussed in \S\ref{subsec:limitations}.}
 \label{tab:pr}
 \end{table}
 
@@ -380,8 +383,9 @@ forwarded.}
 \end{figure}
 
 End-to-end failure rates: GPT-4o-mini $40\%$, GPT-4o $29\%$,
-DeepSeek V3 $26\%$. Because stage-$1$ recall is $100\%$, end-to-end
-precision is determined entirely by the reviewer's precision on the
+DeepSeek V3 $26\%$. Because stage-$1$ recall is recall-maximizing
+(zero observed misses on this set), end-to-end
+precision is determined primarily by the reviewer's precision on the
 \textsc{flagged+} set; the reviewer's own precision is in turn
 driven by how well it can evaluate the specific tokens the filter
 attributes. The context-primed variant's zero late-FP result rests

@@ -5,8 +5,8 @@ We introduced \eps, a per-token normalized Shannon entropy over
 top-$k$ log-probabilities, AST-filtered and max-aggregated into a
 per-function score that also preserves per-token attribution. The
 function-level score is a recall-maximizing filter: on the evaluated
-set, it flags $97\%$ of \textsc{high} API-integration prompts and
-catches $100\%$ of true failures at precision $0.272$. The function-%
+set, it flags $97\%$ of \textsc{high} API-integration prompts with
+zero observed misses, at precision $0.272$. The function-%
 level claim on its own is not distinguishing. The sequence-level
 mean token probability \papg of Spiess et
 al.~\cite{spiess2025calibration} reads the same logprobs, costs the
@@ -45,6 +45,6 @@ leaving the genuine uncertainty concentrated in a $\sim 10\%$ slice
 of the generation --- plausibly applies in other structured-output
 domains (SQL, configuration files, typed program synthesis);
 empirical verification is left to future work. Generation is fast;
-review is the bottleneck. A filter that misses nothing, plus a
+review is the bottleneck. A recall-maximizing filter, plus a
 reviewer that is told exactly where to look, moves review off the
 developer's critical path.

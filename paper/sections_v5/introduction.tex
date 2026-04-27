@@ -66,8 +66,8 @@ AST-based filtering to keep only semantically meaningful tokens
 whitespace, comments, or cosmetic identifiers), we aggregate via
 max-pooling to obtain a single score per function. The function-level
 score is a recall-maximizing filter: at threshold $\eps \ge 0.30$ it
-flags $97\%$ of HIGH prompts and catches $100\%$ of true failures on
-our benchmark. A reviewer asked ``which functions need scrutiny''
+flags $97\%$ of HIGH prompts with zero observed misses on
+our evaluated benchmark set. A reviewer asked ``which functions need scrutiny''
 gets a clear answer; at that scale, so does \papg. But the
 function-level view discards most of what \eps knows. Of the
 $\sim 98$ tokens in a typical flagged function, only $10.5\%$ exceed
@@ -143,9 +143,10 @@ false positives.
     is what no sequence-level signal can produce.
     \item A two-stage filter-plus-review architecture evaluated on
     201 entries across three models (GPT-4o, GPT-4o-mini, DeepSeek
-    V3): near-$100\%$ end-to-end precision at $100\%$ recall, with
-    the reviewer directed to \eps's high-entropy tokens rather than
-    asked to re-read the function.
+    V3): $94\%$ end-to-end precision (context-primed, zero late false
+    positives) with zero observed misses at stage 1, the reviewer
+    directed to \eps's high-entropy tokens rather than asked to
+    re-read the function.
     \item The first direct three-way empirical comparison --- \eps
     vs.\ \papg vs.\ multi-sample --- on production-realistic
     version-split prompts, isolating where each signal fires and

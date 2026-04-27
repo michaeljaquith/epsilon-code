@@ -16,8 +16,8 @@ We introduce \eps, a per-token normalized Shannon entropy computed from
 the top-$k$ log-probabilities returned by the generation API,
 AST-filtered to semantic tokens and max-pooled per function. At the
 function level \eps is a recall-maximizing filter: on four models it
-flags $97.1\%$ of HIGH API-integration prompts, with recall $=1.00$ and
-precision $=0.272$ on a 200-entry evaluated set. The contribution is
+flags $97.1\%$ of HIGH API-integration prompts, with zero observed misses on the 200-entry evaluated set (recall-maximizing design) and
+precision $=0.272$. The contribution is
 not the function-level flag. The contribution is that the same score
 localizes: of the $\sim 98$ tokens in a typical flagged function, only
 $10.5\%$ exceed the flag threshold. \eps narrows the developer's
