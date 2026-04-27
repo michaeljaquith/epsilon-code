@@ -42,17 +42,17 @@ APIs, renamed SDK methods, signature changes between library releases.
 The model is uncertain; the output is not.
 
 \paragraph{Intra- versus inter-generational uncertainty.}
-The gap between a $0.52$-vs-$0.47$ internal split and a confident-%
-looking output is not an accident of any particular model; it is
-structural. Multi-sample uncertainty quantification methods for LLMs
-are \emph{inter-generational}: they sample the same prompt multiple
+The gap between the internal split and a confident-looking output
+is not an accident of any particular model; it is structural.
+Multi-sample uncertainty quantification methods for LLMs are
+\emph{inter-generational}: they sample the same prompt multiple
 times and measure disagreement across completions~\cite{kuhn2023semantic,%
 uqlm2024,sharma2025multisample}. This works when the model's
 uncertainty surfaces as instability across re-rolls --- factual
 questions, open-ended reasoning. Code is not such a task. A model
-with a $0.52$ prior on the deprecated \texttt{Charge} API samples that
-branch nearly every time; once the early tokens commit, the rest of
-the function is forced by context. The uncertainty exists, but it
+with a near-tie prior on the deprecated branch samples that branch
+nearly every time; once the early tokens commit, the rest of the
+function is forced by context. The uncertainty exists, but it
 lives \emph{inside a single generation}, in the token distribution at
 each decoding step, not \emph{across} generations. We call this the
 \emph{intra- versus inter-generational} distinction. It is the
@@ -101,14 +101,12 @@ Because the function-level claim is not distinguishing, the
 comparison in this paper is between \emph{signals}, not just detection
 rates. We benchmark \eps against two alternatives at the same
 $1\times$ API cost and one at $5\times$ on the same production-%
-realistic prompts across four models. At $1\times$: the sequence-level
-mean token probability \papg~\cite{spiess2025calibration} detects
-$65$--$90\%$ of HIGH prompts --- tying \eps on GPT-4o, beating it on
-GPT-4o-mini and GPT-4-turbo, and losing to it on DeepSeek V3. \papg
-deserves credit: on raw function-level detection it is competitive
-with \eps and at the same cost. What it cannot do is identify the
-specific token at which the model was uncertain. \eps produces both
-the function-level score and the token-level attribution. At
+realistic prompts across four models. At $1\times$, the sequence-level
+mean token probability \papg~\cite{spiess2025calibration} is
+competitive with \eps on raw function-level detection
+(\S\ref{sec:comparison}); what it cannot do is identify the specific
+token at which the model was uncertain. \eps produces both the
+function-level score and the token-level attribution. At
 $5\times$ cost, multi-sample methods at $N=5$, $T=0.7$ detect
 $10$--$35\%$ of HIGH prompts: the $52/47$ hesitation does not
 surface as output variation, so inter-generational signals are
@@ -136,17 +134,11 @@ false positives.
     DeepSeek V3 against $10$--$35\%$ for direct multi-sample
     measurement and $5\%$ for UQLM on the same benchmark.
     \item Token-level localization as \eps's distinguishing claim:
-    $\sim 98$-token functions reduce to an average of $10.4$
-    actionable tokens per function ($10.5\%$ of the function) --- an
-    $89\%$ reduction in within-function review burden. The
-    function-level flag agrees with \papg; the token-level attribution
-    is what no sequence-level signal can produce.
-    \item A two-stage filter-plus-review architecture evaluated on
-    201 entries across three models (GPT-4o, GPT-4o-mini, DeepSeek
-    V3): $94\%$ end-to-end precision (context-primed, zero late false
-    positives) with zero observed misses at stage 1, the reviewer
-    directed to \eps's high-entropy tokens rather than asked to
-    re-read the function.
+    the function-level flag agrees with \papg; the token-level
+    attribution is what no sequence-level signal can produce.
+    \item A two-stage filter-plus-review architecture: $94\%$
+    end-to-end precision on $201$ entries across three models, with
+    the reviewer directed to high-\eps tokens.
     \item The first direct three-way empirical comparison --- \eps
     vs.\ \papg vs.\ multi-sample --- on production-realistic
     version-split prompts, isolating where each signal fires and

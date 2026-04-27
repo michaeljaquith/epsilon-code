@@ -21,15 +21,6 @@ numerical analysis, $\eps$ denotes a small perturbation that
 propagates through a computation --- a high-\eps token is such a
 perturbation at a specific decision point.
 
-\paragraph{Terminology: \textsc{high} and \textsc{low} prompts.}
-We use the labels \textsc{high} and \textsc{low} throughout.
-\textsc{high} prompts are API/version-split tasks (Stripe, OpenAI,
-SQLAlchemy, FastAPI, Pydantic) where an incorrect choice causes
-functional failure. \textsc{low} prompts are pure-logic tasks (sort,
-palindrome, Fibonacci, two-sum) where any correct algorithm is
-functionally equivalent. The split and detection rates per category
-appear in \S\ref{subsec:calibration}.
-
 \subsection{Three types of code-generation uncertainty}
 \label{subsec:types}
 
@@ -48,10 +39,10 @@ code.
 was a function or parameter name on the first line.
 
 \paragraph{Type 2 --- Consequential (API/library decisions).}
-Uncertainty about which \emph{API or library} to use. Example:
-\texttt{stripe.Charge.create()} (prob.\ $0.52$) vs.\
-\texttt{stripe.PaymentIntent.create()} (prob.\ $0.47$), $\eps =
-0.73$ at the attribute token. This is the target signal.
+Uncertainty about which \emph{API or library} to use, e.g.\
+\texttt{stripe.Charge.create()} vs.\
+\texttt{stripe.PaymentIntent.create()} at the attribute token.
+This is the target signal.
 
 \paragraph{Type 3 --- Implementation-approach.}
 Uncertainty among multiple correct algorithms (recursive vs.\
@@ -227,18 +218,6 @@ $\sim 10$-token problem at the flag threshold --- the tokens \eps
 identified as high-entropy. The function-level flag rate of $97\%$
 is not a problem to be defended against; it is the entry point to a
 localization step that no other signal in the literature provides.
-
-\paragraph{Why \textsc{low} looks similar.}
-\textsc{low} prompts show a similar token-level focus profile
-($13.1\%$ flag). The $90\%$ function-level flag rate on \textsc{low}
-prompts is the residual Type 3 false-positive floor: all $30$
-\textsc{low} functions executed correctly under \texttt{exec()}
-assertions, so the function-level fires are correct code that \eps
-observed hesitation on. At the token level, those fires localize to
-the handful of tokens where a genuinely-alternative-but-equivalent
-choice was available (brute vs.\ hash two-sum; recursive vs.\
-iterative Fibonacci), and the stage-$2$ reviewer clears them fast
-because both branches pass.
 
 Figure~\ref{fig:token-focus-detail} shows the token-level \eps
 trajectory on Stripe Scenario A (GPT-4o). Of $98$ retained tokens,

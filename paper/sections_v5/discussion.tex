@@ -70,16 +70,8 @@ depend on parameter choice: \eps is read at $T=0$ where the model's
 internal distribution is exposed directly, while any sampling-based
 method is limited to what that distribution produces as behaviour.
 
-\paragraph{Type 3 floor.} Implementation-approach uncertainty on
-simple prompts legitimately raises \eps on correct code. AST
-filtering does not remove it; the $\sim 50\%$ \textsc{low} FP is
-predominantly Type 3 and unlikely to shrink without sacrificing
-recall. The token-level view does not help here either: a Type 3
-fire lives on exactly the tokens where the algorithm-choice
-decision is made, and \eps cannot tell (without ground truth) that
-both branches are correct. The mitigation is reviewer speed: a
-Type 3 fire localizes to a small number of tokens and the reviewer
-clears it fast because both alternatives pass inspection.
+\paragraph{Type 3 floor.} The Type 3 false-positive floor remains;
+the mitigation is reviewer speed (both branches pass).
 
 \paragraph{LLM-judged ground truth.}\label{subsec:gt-disclosure}
 \textsc{low} ground truth is \texttt{exec()}-verified against

@@ -131,22 +131,19 @@ equivalence --- up to and including symbolic execution or semantic-%
 equivalence checks on generated code --- to improve behavioural
 consistency detection specifically for code outputs.
 
-These methods are structurally limited for the task we study.
-Intra-generational uncertainty does not surface as output variation
-when the distribution is peaked (as it typically is for code tokens:
-a $0.52$-peaked distribution picks its peak nearly every time at
-temperature $0.7$, and always at temperature $0$). A model can be
-internally torn between two API calls and emit one of them unanimously
-across re-rolls. The Stripe example we report empirically in
-\S\ref{subsec:multisample-comp} --- GPT-4o with $\eps=0.878$ and
-sample diversity $=0.00$ across $N=5$ at $T=0.7$ --- is a direct
-instance. A stronger equivalence check improves precision on Type 3
-(implementation-approach) false positives, where two semantically
-equivalent implementations would be conflated by output-level
-diversity alone; but it cannot recover a signal that never varies
-across samples in the first place. The intra/inter distinction is
-not a claim that inter-generational methods are badly implemented,
-only that they are measuring a different quantity.
+These methods are structurally limited for the task we study:
+intra-generational uncertainty does not surface as output variation
+when the token distribution is peaked, as it typically is for code.
+A model can be internally torn between two API calls and emit one of
+them unanimously across re-rolls; we provide the empirical instance
+in \S\ref{subsec:multisample-comp}. A stronger equivalence check
+improves precision on Type 3 (implementation-approach) false
+positives, where two semantically equivalent implementations would
+be conflated by output-level diversity alone; but it cannot recover
+a signal that never varies across samples in the first place. The
+intra/inter distinction is not a claim that inter-generational
+methods are badly implemented, only that they are measuring a
+different quantity.
 
 \subsection{Generation-time intervention and adaptive decoding}
 \label{subsec:related-adadec}

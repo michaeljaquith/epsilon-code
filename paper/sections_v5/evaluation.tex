@@ -57,10 +57,7 @@ have $n=20$--$30$ entries each; numbers are rounded.}
 \label{tab:token-focus-per-model}
 \end{table}
 
-The aggregate numbers are: $10.4$ tokens per flagged function at the
-flag threshold ($10.5\%$ of an average $\sim 98$-token function). The
-token review burden reduction relative to reading the whole function
-is $89\%$ at the flag threshold.
+The aggregate is summarized in Table~\ref{tab:token-focus}.
 Figure~\ref{fig:token-focus-detail} (in \S\ref{subsec:token-focus})
 shows the per-token trajectory on one representative function;
 Figure~\ref{fig:token-focus-teaser} (in \S\ref{sec:introduction})
@@ -333,13 +330,10 @@ token-level attribution (\S\ref{subsec:token-focus}).
 
 Having established stage-$1$ recall and token-level localization, we
 turn to the stage-$2$ reviewer that converts the recall-maximizing
-filter into an end-to-end system with usable precision. The
-reviewer is not asked to re-read the function. It is given the
-function plus the specific high-\eps tokens, and asked to evaluate
-those tokens in context. The token-level attribution is what makes
-the reviewer fast: at current API prices, pointing the reviewer at
-a handful of tokens rather than $98$ costs fractions of a cent per
-entry and completes in seconds.
+filter into an end-to-end system with usable precision. The reviewer
+is given the function plus the specific high-\eps tokens, and asked
+to evaluate those tokens in context. At current API prices this
+costs fractions of a cent per entry and completes in seconds.
 
 Evaluated on $201$ entries (production FastAPI codebase plus
 scenarios A--E, three models). Every \textsc{flagged+} entry is sent
