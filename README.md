@@ -71,63 +71,89 @@ Five calibrated scenarios demonstrating different failure classes:
 
 ## Benchmark
 
+The paper evaluates on a 228-entry set: 30-prompt calibration benchmark (per model)
+plus 174 production and scenario entries across GPT-4o, GPT-4o-mini, and DeepSeek V3.
+
 ```bash
-# 30-prompt benchmark (10 LOW + 20 HIGH) across models
+# 30-prompt calibration benchmark (10 LOW + 20 HIGH) — one run per model
 python benchmark/benchmark_calibration.py --model gpt-4o
 python benchmark/benchmark_calibration.py --model gpt-4o-mini
-python benchmark/benchmark_calibration.py --model gpt-4-turbo
+python benchmark/benchmark_calibration.py --model deepseek-ai/DeepSeek-V3
 
-# UQLM comparison baseline (requires: pip install uqlm langchain-openai)
-python benchmark/benchmark_uqlm.py --skip-epsilon
+# Production benchmark: 40 real FastAPI functions (API vs logic classification)
+python benchmark/benchmark_production.py --model gpt-4o
 
-# Scenario A–E qualitative runs
+# Scenario A–E runs (qualitative + quantitative)
 python benchmark/benchmark_scenarios.py --model gpt-4o
 
-# Scenario E combined-prompt collapse experiment
+# Scenario E combined-prompt collapse experiment (uncertainty collapse finding)
 python benchmark/benchmark_scenario_e_collapse.py
 
 # exec()-based ground truth verification for LOW prompts
 python benchmark/ground_truth_low.py
 
-# Precision/recall curve analysis (combines LOW + HIGH ground truth)
+# Precision/recall curve analysis
 python benchmark/analyze_epsilon_pr.py
 
-# Two-stage review loop (2A: no context, 2B: with learned FP patterns)
+# Token-level focus analysis (89% reduction in review surface)
+python benchmark/analyze_token_focus.py
+
+# Two-stage review loop (stage 1: ε filter, stage 2: token-directed LLM reviewer)
 python benchmark/review_loop.py
+
+# p_avg baseline comparison through the full review loop
+python benchmark/benchmark_p_avg_review.py
+
+# UQLM comparison baseline (requires: pip install uqlm langchain-openai)
+python benchmark/benchmark_uqlm.py --skip-epsilon
 ```
 
-Results from the paper are in `benchmark/results/`.
+Pre-computed results from the paper are in `benchmark/results/`.
 
 ## How it works
 
 1. **Token-level ε**: normalized Shannon entropy over top-5 logprob alternatives at each token position — `ε_t = -(1/log k) Σ p_i log p_i`
 2. **AST filtering**: function names, parameter names, and local variable names excluded (Type 1 cosmetic uncertainty); only API selectors, import targets, and keyword arguments retained
 3. **Max aggregation**: file/function ε = max token ε above floor (0.30) — localizes uncertainty to a specific actionable token
-4. **Two-stage system**: ε filter at recall=1.00 (catches everything) + parallel LLM reviewer (clears false positives, precision → ~100%)
+4. **Two-stage system**: recall-maximizing ε filter (zero observed misses on the evaluated set) + parallel LLM reviewer directed to high-ε tokens (end-to-end precision 94%)
 
-See the paper for full details including the three-type uncertainty taxonomy and review loop evaluation.
+See the paper (`paper/main.pdf`) for full details including the three-type uncertainty taxonomy, the p_avg comparison, and the review loop evaluation.
 
 ## Repository structure
 
 ```
-epsilon/                    Core library
-  __init__.py
-  core.py                   EpsilonWrapper, EpsilonResult, TokenEpsilon
-  renderer.py               Terminal output with rich
-  logger.py                 Persistent JSONL session log
+epsilon/                      Core library
+  core.py                     EpsilonWrapper, EpsilonResult, TokenEpsilon
+  renderer.py                 Terminal output with rich
+  logger.py                   Persistent JSONL session log
 
-demos/                      Calibrated scenario scripts (A–E)
-benchmark/                  Benchmark and analysis scripts
-  benchmark_calibration.py  30-prompt calibration benchmark
-  benchmark_uqlm.py         UQLM comparison baseline
-  benchmark_scenarios.py    Qualitative scenario runner (A–E)
+demos/                        Calibrated scenario scripts (A–E)
+
+benchmark/                    Benchmark, analysis, and comparison scripts
+  benchmark_calibration.py    30-prompt calibration benchmark
+  benchmark_production.py     Production benchmark (40 FastAPI functions)
+  benchmark_scenarios.py      Scenario A–E runner
   benchmark_scenario_e_collapse.py  Combined vs per-function generation
-  ground_truth_low.py       exec()-based LOW ground truth verification
-  analyze_epsilon_pr.py     Precision/recall curve analysis
-  review_loop.py            Two-stage filter + LLM review loop
-  results/                  Pre-computed benchmark outputs
+  benchmark_multisample.py    Multi-sample diversity baseline (Sharma & David)
+  benchmark_uqlm.py           UQLM comparison baseline
+  benchmark_p_avg_review.py   p_avg baseline through the full review loop
+  ground_truth_low.py         exec()-based LOW ground truth verification
+  review_loop.py              Two-stage filter + token-directed LLM reviewer
+  analyze_epsilon_pr.py       Precision/recall curve analysis
+  analyze_token_focus.py      Token-level focus: review surface reduction
+  analyze_p_avg.py            p_avg threshold sweep vs ε
+  analyze_ensemble.py         Cascaded feature distribution analysis
+  analyze_failures.py         Token-level failure case analysis
+  results/                    Pre-computed benchmark outputs (JSON)
 
-paper/                      LaTeX source (arXiv submission)
+paper/                        LaTeX source and compiled PDF
+  main.tex                    Master file
+  main.pdf                    Compiled paper (current version)
+  sections_v5/                Current LaTeX sections
+  figures/                    PDF figures used in paper
+  references.bib              Bibliography
+
+generate_figures_v5.py        Figure generation script (current)
 ```
 
 ## License
