@@ -105,9 +105,14 @@ signal in whatever UI surfaces reviewer output.
 Injecting learned false-positive patterns into the reviewer's
 context (the configuration evaluated in \S\ref{subsec:review-loop})
 raised clearance from $53.2\%$ to $68.7\%$, and late false positives
-fell from $4$ to $0$. This is in-context improvement on a fixed
-model; training-time improvement would be expected to compound with
-it. The mechanism generalizes to any setting where a downstream
+fell from $4$ to $0$. This is a trade-off, not a free win: the same
+priming that eliminates late false positives also suppresses some
+genuine failures that the context-free reviewer had forwarded
+(Figure~\ref{fig:review-loop}). Practitioners in high-stakes
+settings should weigh the suppressed-failure cost against the
+clearance and late-FP gains. This is in-context improvement on a
+fixed model; training-time improvement would be expected to compound
+with it. The mechanism generalizes to any setting where a downstream
 model is judging upstream output with known failure patterns.
 
 \subsection{Future work}

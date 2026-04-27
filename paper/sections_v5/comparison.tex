@@ -68,7 +68,11 @@ DeepSeek V3  & $85\%$ (17/20) & $70\%$ & $65\%$ (13/20) & $10\%$ \\
 GPT-4-turbo on raw \textsc{high} detection; on DeepSeek V3, \eps is
 higher ($85\%$ vs.\ $65\%$). At the same $1\times$ API cost, the raw
 function-level detection picture favours neither signal uniformly.
-\papg is a real competitor on this axis and deserves credit.}
+\textsc{high} det.\ here is the flagging rate on \textsc{high}-category
+prompts, not recall on true failures: when the model generates
+correct code for a \textsc{high} prompt, \eps correctly produces
+\textsc{complete} (low \eps), and those entries lower this rate
+without representing missed failures.}
 \label{tab:papg}
 \end{table}
 
@@ -92,11 +96,9 @@ to re-read the function --- they need to evaluate the method-%
 selector decision (see Table~\ref{tab:token-focus}).
 
 This is the distinguishing claim. It is not a higher rate; it is a
-different kind of output. \papg is a competitive function-level
-signal; \eps is a function-level signal plus a token-level attribution.
-We have now run the \papg baseline through the full review loop to
-measure whether that attribution gap produces a precision gap at the
-system level.
+different kind of output. We ran the \papg baseline through the full
+review loop to measure whether that attribution gap produces a
+precision gap at the system level.
 
 \paragraph{\papg through the review loop.}
 We re-ran all six production and scenario result files with
@@ -139,13 +141,10 @@ examine.}
 \label{tab:pavg-endtoend}
 \end{table}
 
-The signal-level conclusion from \S\ref{subsec:papg-comp} stands: at
-$1\times$ API cost, \papg is competitive with \eps on raw
-function-level detection for three of four OpenAI models. The
-system-level conclusion is different. Token attribution is not a
-refinement on top of the filter; it is the mechanism that enables
-$94\%$ end-to-end precision. Without it, the same review loop
-achieves $50.5\%$.
+The system-level conclusion differs from the signal-level one.
+Token attribution is not a refinement on top of the filter; it is
+the mechanism that enables $94\%$ end-to-end precision. Without it,
+the same review loop achieves $50.5\%$.
 
 \paragraph{\texttt{min\_logprob} as a sanity floor.}
 The older single-token \texttt{min\_logprob} baseline
