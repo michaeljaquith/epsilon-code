@@ -319,7 +319,24 @@ def status_marker(status: str) -> str:
     return {"COMPLETE": "✓", "FLAGGED": "⚠", "PAUSED": "⚠⚠", "ABORTED": "✖"}.get(status, "?")
 
 
-def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total: int) -> dict:
+SYSTEM_PROMPT_FULL = (
+    "You are an expert software engineer. "
+    "Respond with raw Python code only — no markdown fences, "
+    "no explanation, no prose. Output only the function(s) requested. "
+    "Use concise conventional parameter names (n for integers, s for strings, "
+    "lst for lists, d for dicts, f for floats). "
+    "Name functions using the most direct verb-noun form from the prompt."
+)
+
+SYSTEM_PROMPT_BARE = (
+    "You are an expert software engineer. "
+    "Respond with raw Python code only — no markdown fences, "
+    "no explanation, no prose. Output only the function(s) requested."
+)
+
+
+def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total: int,
+               system: str = SYSTEM_PROMPT_FULL, store_tokens: bool = False) -> dict:
     label   = entry["label"]
     cat     = "LOW " if entry["id"].startswith("low") else "HIGH"
     print(f"  [{idx:02d}/{total}] {cat} — {label} ... ", end="", flush=True)
@@ -328,6 +345,7 @@ def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total
         prompt=entry["prompt"],
         context=entry.get("context", ""),
         model=model,
+        system=system,
     )
 
     marker  = status_marker(result.status)
@@ -354,7 +372,7 @@ def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total
     epsilon_mean = round(sum(mean_cands) / len(mean_cands), 4) if mean_cands else 0.0
     fired_mean   = epsilon_mean >= THRESHOLDS["threshold_soft"]
 
-    return {
+    rec = {
         "id":       entry["id"],
         "label":    label,
         "category": cat.strip(),
@@ -373,6 +391,20 @@ def run_prompt(wrapper: EpsilonWrapper, entry: dict, model: str, idx: int, total
         "prompt_tokens":     result.prompt_tokens,
         "completion_tokens": result.completion_tokens,
     }
+    if store_tokens:
+        rec["token_data"] = [
+            {
+                "t":   te.token,
+                "eps": round(te.epsilon, 4),
+                "lp":  round(te.logprob, 4),
+                "pos": te.position,
+                "ws":  te.is_noise_ws,
+                "dcl": te.is_ast_decl,
+                "fmt": te.is_fence_fmt,
+            }
+            for te in result.token_epsilons
+        ]
+    return rec
 
 
 # ------------------------------------------------------------------ #
@@ -388,11 +420,15 @@ def get_together_client() -> OpenAI:
 
 def main():
     parser = argparse.ArgumentParser(description="ε calibration benchmark")
-    parser.add_argument("--model",    default="gpt-4o")
-    parser.add_argument("--provider", default="openai", choices=["openai", "together"])
-    parser.add_argument("--no-color", action="store_true")
-    parser.add_argument("--low-only", action="store_true", help="Run LOW set only")
-    parser.add_argument("--high-only", action="store_true", help="Run HIGH set only")
+    parser.add_argument("--model",        default="gpt-4o")
+    parser.add_argument("--provider",     default="openai", choices=["openai", "together"])
+    parser.add_argument("--no-color",     action="store_true")
+    parser.add_argument("--low-only",     action="store_true", help="Run LOW set only")
+    parser.add_argument("--high-only",    action="store_true", help="Run HIGH set only")
+    parser.add_argument("--no-naming",    action="store_true",
+                        help="Use bare system prompt without naming-convention instructions (stages 1-2 baseline)")
+    parser.add_argument("--store-tokens", action="store_true",
+                        help="Save per-token filter provenance data for filtering-stage replay analysis")
     args = parser.parse_args()
 
     if args.provider == "together":
@@ -400,6 +436,8 @@ def main():
     else:
         client = OpenAI()
     wrapper = EpsilonWrapper(client, config=THRESHOLDS)
+
+    system = SYSTEM_PROMPT_BARE if args.no_naming else SYSTEM_PROMPT_FULL
 
     if args.high_only:
         prompts = HIGH_PROMPTS
@@ -428,7 +466,8 @@ def main():
     total_cost_out = 0
 
     for i, entry in enumerate(prompts, 1):
-        rec = run_prompt(wrapper, entry, args.model, i, total)
+        rec = run_prompt(wrapper, entry, args.model, i, total,
+                         system=system, store_tokens=args.store_tokens)
         results.append(rec)
         total_cost_in  += rec["prompt_tokens"]
         total_cost_out += rec["completion_tokens"]
@@ -504,19 +543,23 @@ def main():
 
     # Save results
     output = {
-        "timestamp":        datetime.now().isoformat(timespec="seconds"),
-        "model":            args.model,
-        "thresholds":       THRESHOLDS,
-        "n_low":            len(low_results),
-        "n_high":           len(high_results),
+        "timestamp":          datetime.now().isoformat(timespec="seconds"),
+        "model":              args.model,
+        "naming_conventions": not args.no_naming,
+        "store_tokens":       args.store_tokens,
+        "thresholds":         THRESHOLDS,
+        "n_low":              len(low_results),
+        "n_high":             len(high_results),
         "false_positive_rate_max":  round(fp_rate,   4),
         "false_positive_rate_mean": round(fp_mean,   4),
         "detection_rate_max":       round(det_rate,  4),
         "detection_rate_mean":      round(det_mean,  4),
-        "results":          results,
+        "results":            results,
     }
     model_slug = args.model.replace("/", "_")
-    out_path = f"benchmark_{model_slug}.json"
+    suffix = "_nonaming" if args.no_naming else ""
+    suffix += "_staged" if args.store_tokens else ""
+    out_path = f"benchmark_{model_slug}{suffix}.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2)
     print(f"  Results saved to: {out_path}")

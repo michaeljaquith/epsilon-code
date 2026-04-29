@@ -18,6 +18,10 @@ class TokenEpsilon:
     epsilon:          float
     top_alternatives: list   # [(token_str, probability), ...]
     is_code_token:    bool = True  # False for noise tokens (comments, whitespace, declarations)
+    # Fine-grained filter provenance — used by filtering-stage replay analysis
+    is_noise_ws:   bool = False   # True if whitespace / comment / backtick fence
+    is_ast_decl:   bool = False   # True if AST declaration (function name, param, local var)
+    is_fence_fmt:  bool = False   # True if output-format uncertainty (first ≤2 tokens w/ backtick alt)
 
 
 @dataclass
@@ -333,7 +337,9 @@ class EpsilonWrapper:
             line_start = line_starts[line_idx] if line_idx < len(line_starts) else 0
             token_col  = char_pos - line_start
             te.col_offset    = token_col
-            te.is_code_token = not _is_noise_token(te.token, line_idx, token_col, code_lines)
+            noise            = _is_noise_token(te.token, line_idx, token_col, code_lines)
+            te.is_noise_ws   = noise
+            te.is_code_token = not noise
             char_pos  += len(te.token)
             line_num  += te.token.count("\n")
         return token_epsilons
@@ -447,6 +453,7 @@ class EpsilonWrapper:
                     for (dcl_start, dcl_end) in decl_by_line[te.line]:
                         if tok_start < dcl_end and tok_end > dcl_start:
                             te.is_code_token = False
+                            te.is_ast_decl   = True
                             break
 
         # Mark fence-format uncertainty as cosmetic noise.
@@ -460,6 +467,7 @@ class EpsilonWrapper:
             if te.is_code_token and te.position <= 2:
                 if any(alt.strip().startswith(_FENCE_PREFIXES) for alt, _ in te.top_alternatives):
                     te.is_code_token = False
+                    te.is_fence_fmt  = True
 
         # Count ε-contributing code tokens — used for the token-budget domain switch.
         # Uses the same floor as _aggregate_epsilon so the count reflects exactly

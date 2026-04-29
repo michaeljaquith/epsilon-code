@@ -149,11 +149,12 @@ benchmark/                    Benchmark, analysis, and comparison scripts
 paper/                        LaTeX source and compiled PDF
   main.tex                    Master file
   main.pdf                    Compiled paper (current version)
-  sections_v5/                Current LaTeX sections
+  sections_v6/                Current LaTeX sections
   figures/                    PDF figures used in paper
+    make_fig_motivation.py    Generator for Figure 1 (motivation panel)
   references.bib              Bibliography
 
-generate_figures_v5.py        Figure generation script (current)
+generate_figures_v5.py        Figure generation script (data figures)
 ```
 
 ## License

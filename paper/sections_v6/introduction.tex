@@ -77,21 +77,32 @@ selector on line $4$, not in the parameter block on lines $7$--$12$.
 \papg on ``which,'' and a token-level localizer that no sequence-level
 aggregate can produce.
 
-Figure~\ref{fig:token-focus-teaser} makes this concrete on Stripe
-Scenario A (\S\ref{subsec:token-focus}): the function contains $98$
-semantic tokens, and the model's uncertainty concentrates at a
-handful of them. The reviewer does not need to re-read the function;
-it needs to look at those tokens.
+Figure~\ref{fig:token-focus-teaser} stages the full problem on Stripe
+Scenario A (\S\ref{subsec:token-focus}): what the reviewer sees is a
+single fluent line of code; what the model nearly emitted instead is
+a near-tie with a different, currently-supported API; and where \eps
+directs the review is to the few tokens within the $98$-token
+function where that hesitation lives. The same score that flags the
+function names the tokens that drove the flag.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/fig_token_focus.pdf}
-\caption{Of $98$ semantic tokens in a typical flagged function
-(Stripe Scenario A, GPT-4o), \eps exceeds the flag threshold at
-$10$ tokens ($10.2\%$). The function is flagged --- but the
-within-function review surface is a small fraction of the generated
-code. Darker intensity $= $ higher \eps. See
-\S\ref{subsec:token-focus}.}
+\includegraphics[width=\textwidth]{figures/fig_motivation.pdf}
+\caption{The problem, the hidden distribution, and \eps's response,
+on Stripe Scenario A (GPT-4o). \textbf{Left:} the reviewer sees a
+fluent, compiling call to \texttt{stripe.Charge.create(\ldots)} ---
+deprecated since $2019$ --- with a single-sample log-probability of
+$0.91$. \textbf{Centre:} at the method-selector token, the top-$k$
+distribution is a near-tie between \texttt{Charge} ($P=0.52$,
+deprecated) and \texttt{PaymentIntent} ($P=0.47$, current); the
+top-$k$-normalized entropy at this token is $\eps = 0.878$.
+\textbf{Right:} of the $98$ semantic tokens in the function, $10$
+($10.2\%$) exceed the flag threshold; the remaining $88$ are
+confident boilerplate. \eps narrows the within-function review
+surface by $89\%$ and points the reviewer at the specific tokens
+that drove the flag. The paper-level claim in one image:
+single-sample likelihood hides the within-distribution split that
+\eps reads, and \eps names the few tokens that need review.}
 \label{fig:token-focus-teaser}
 \end{figure}
 

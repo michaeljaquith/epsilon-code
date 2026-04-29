@@ -109,25 +109,33 @@ over-filtering of delimiter-prefixed tokens such as \texttt{(db}.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \toprule
-\textbf{Configuration} & \textbf{\textsc{low} FP rate} \\
+\textbf{Configuration} & \textbf{\textsc{low} FP} & \textbf{\textsc{high} det.} \\
 \midrule
-Naive token entropy (no filtering)                & $90\%$ \\
-+ Whitespace / comment filtering                   & $90\%$ \\
-+ System prompt naming conventions                 & $60\%$ \\
-+ AST declaration filtering                        & $60\%$ \\
-+ Fence-format stripping                           & $50\%$ \\
+Naive token entropy (no filtering)                & $100\%$ & $100\%$ \\
++ Whitespace / comment filtering                  & $100\%$ & $100\%$ \\
++ System prompt naming conventions                &  $70\%$ &  $95\%$ \\
++ AST declaration filtering                       &  $60\%$ &  $80\%$ \\
++ Fence-format stripping                          &  $50\%$ &  $80\%$ \\
 \midrule
-Residual (Type 3 only)                             & $50\%$ \\
+Residual (Type 3 only)                            &  $50\%$ & --- \\
 \bottomrule
 \end{tabular}
-\caption{Successive filtering stages on $10$ \textsc{low} prompts.
-Naming-convention prompt and AST filter are partially overlapping;
-without the prompt, AST filtering alone drops FP from $90\%$ to
-$70\%$. Residual $50\%$ is Type 3; the fraction of Type 3 fires
-in production API-integration code depends on how constrained
-the function's algorithm space is.}
+\caption{Successive filtering stages on $10$ \textsc{low} and $20$
+\textsc{high} prompts (GPT-4o, fresh staging run). \textsc{low} FP
+is the fraction of pure-logic prompts that fired; \textsc{high} det.\
+is the fraction of API-version-split prompts that fired. The AST
+declaration filter trades a $15$pp drop in \textsc{high} detection
+($95\%\to80\%$) for a $10$pp reduction in \textsc{low} FP
+($70\%\to60\%$): three \textsc{high} prompts whose peak-$\eps$ token
+was a function name (not an API selector) fall below the flag threshold
+once declarations are removed. This is correct behaviour --- those
+functions were uncertain about \emph{naming}, not about \emph{which
+API to call} --- but it is an honest trade-off rather than a free win.
+Residual $50\%$ \textsc{low} FP is Type 3 (irreducible); stages
+$1$--$2$ use a bare system prompt without naming-convention
+instructions.}
 \label{tab:filtering}
 \end{table}
 
