@@ -521,12 +521,12 @@ def fig_intra_inter():
                  fontsize=FS_BASE - 0.5)
     ax.grid(visible=False)
 
-    fig.text(0.50, 0.10,
+    fig.text(0.50, 0.06,
              r'The $52/47$ internal hesitation never surfaces as output variation.',
              ha='center', va='bottom', fontsize=FS_ANNOT, style='italic',
              color='#555')
 
-    fig.tight_layout(rect=[0, 0.07, 1, 1])
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
     _save(fig, 'fig_intra_inter.pdf')
 
 
