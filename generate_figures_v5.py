@@ -659,8 +659,9 @@ def fig_token_focus_detail():
             va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='#AAA', linewidth=0.5))
 
-    # Legend placed bottom-right, well clear of the annotations above.
-    ax.legend(loc='lower right', frameon=False, fontsize=FS_ANNOT)
+    # Legend placed top-right, clear of the data bars and left-side summary box.
+    ax.legend(loc='upper right', frameon=True, framealpha=1.0,
+              edgecolor='#AAA', fontsize=FS_ANNOT)
 
     fig.tight_layout()
     _save(fig, 'fig_token_focus_detail.pdf')
