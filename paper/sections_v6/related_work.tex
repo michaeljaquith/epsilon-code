@@ -77,14 +77,45 @@ David~\cite{sharma2025multisample} adapt entropy and mutual information
 to code generation and show, using symbolic execution as ground truth,
 that uncertainty-based abstention reduces incorrect outputs to near
 zero; their finding grounds the core premise of \eps in prior empirical
-evidence without requiring symbolic execution at inference time. Gros
-and Devanbu~\cite{gros2025localized} assign calibrated uncertainty to
-individual code regions using a supervisor model, demonstrating that
-sub-function localization is both feasible and informative. Our
-contribution relative to both is that we infer token-level risk
-directly from the generator's logprob distribution---no auxiliary model
-or test executor required---and route the result to a downstream review
-loop rather than to abstention.
+evidence without requiring symbolic execution at inference time.
+
+Gros and Devanbu~\cite{gros2025localized} address the same
+sub-function localization question via a different route: they train a
+separate supervisor probe on edited-region labels to estimate, in a
+white-box fashion, which lines of generated code a developer is likely
+to edit, reporting calibrated Brier Skill Scores around $0.2$ on edited
+lines. \eps differs along three axes. It reads the generator's own
+top-$k$ distribution at the same API call, with no auxiliary model
+required; it requires no labeled edit data to train against; and it is
+integrated into a recall-first filter plus stage-$2$ reviewer pipeline
+rather than offered as a standalone calibrated signal. Their work and
+ours agree that sub-function localization is feasible and informative;
+they differ on whether the localization comes from a trained supervisor
+or directly from the generator's exposed distribution.
+
+The closest prior work on AST-grounded token-level confidence for code
+is ASTrust~\cite{palacio2024astrust}, which maps token-level model
+confidence to AST syntax categories (e.g.\ \texttt{Identifier},
+\texttt{Keyword}, \texttt{Literal}) and validates the resulting
+heat-map / sequence / graph visualizations across $12$ LLMs and human
+studies as an interpretability artifact for code review. \eps and
+ASTrust read the same underlying per-token signal, and ASTrust
+establishes that grouping that signal by AST structure is useful for
+developers. The differentiation is in how the AST is used and how the
+signal is consumed downstream. ASTrust \emph{groups} tokens by AST
+category for visualization; \eps \emph{filters} on AST role to remove
+Type 1 cosmetic uncertainty (declaration positions: function names,
+parameter names, local variable bindings) before scoring, so that the
+surviving high-entropy tokens are concentrated on attribute accesses,
+keyword arguments, and import targets where the consequential /
+implementation distinction (\S\ref{subsec:types}) makes them
+actionable. The Type 2/Type 3 taxonomy is what converts a localized
+signal into a routing decision: a token is forwarded to a stage-$2$
+reviewer because of where it falls in the taxonomy, not because of
+where it falls in the AST. ASTrust's contribution is the explanatory
+overlay; \eps's contribution is the routing layer of an end-to-end
+filter-plus-reviewer system that directs a downstream model to the
+specific tokens that drove the flag.
 
 Earlier token-level calibration studies (Kadavath et
 al.~\cite{kadavath2022language}; Varshney et
@@ -140,8 +171,18 @@ in \S\ref{subsec:multisample-comp}. A stronger equivalence check
 improves precision on Type 3 (implementation-approach) false
 positives, where two semantically equivalent implementations would
 be conflated by output-level diversity alone; but it cannot recover
-a signal that never varies across samples in the first place. The
-intra/inter distinction is not a claim that inter-generational
+a signal that never varies across samples in the first place. Song
+et al.~\cite{song2025structural} sharpen the equivalence check
+further by computing depth-bounded AST subtree distributions across
+multiple samples and comparing them via Jensen-Shannon divergence
+and a Structural Cross-Entropy ratio --- a more principled, AST-driven
+diversity measure than NLI clustering for cases where the output
+\emph{does} vary across re-rolls. It shares the structural blindness
+of multi-sample methods for our setting (a confidently-emitted
+deprecated API is structurally identical across samples by
+construction, so no AST-derived diversity measure will fire), but is
+the appropriate tool when sampled outputs do diverge structurally.
+The intra/inter distinction is not a claim that inter-generational
 methods are badly implemented, only that they are measuring a
 different quantity.
 
@@ -220,11 +261,17 @@ benchmarks~\cite{chen2021evaluating,austin2021program,%
 jimenez2024swebench} measure whether the output passes test cases,
 not whether the model was confident; a silent dependency update can
 turn a fully-passing generation into a regression that no test in
-the current suite exercises. To our knowledge, no prior work treats
-within-generation \emph{token-level} uncertainty as a first-class
-routing signal for code review that localizes where within a
-function to look; the closest is CodeT~\cite{chen2022codet} and
-related self-consistency approaches, which are inter-generational by
+the current suite exercises. Token-level uncertainty for code is studied prior to this work ---
+ASTrust~\cite{palacio2024astrust} groups token-level confidence by
+AST category for interpretability, AdaDec~\cite{adadec2025} reads
+the same per-token signal at decoding time, and Vasconcelos et
+al.~\cite{vasconcelos2024genprob} demonstrate user benefit from
+token-level highlighting in IDEs. To our knowledge, no prior work
+packages this signal as the routing layer of an end-to-end
+filter-plus-reviewer pipeline that directs a downstream model to
+the specific tokens that drove the flag; the closest pipeline-level
+analogues are CodeT~\cite{chen2022codet} and related
+self-consistency approaches, which are inter-generational by
 construction, and post-generation repair with uncertainty-based
 ranking~\cite{ye2022selfapr}, which operates on already-generated
 candidates.

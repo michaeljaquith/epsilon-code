@@ -15,9 +15,14 @@ The distinguishing contribution is what the function-level score
 gives up to become a single scalar, and what \eps preserves instead.
 A reviewer given \eps's output is not asked to re-read the function;
 they are asked to evaluate the $\sim 10\%$ of semantic tokens that
-cross the flag threshold. No sequence-level or
-inter-generational signal in the literature produces this
-localization at the same cost. \papg cannot: it is one scalar per
+cross the flag threshold. No sequence-level or inter-generational
+signal produces this localization. Prior token-level work
+(ASTrust~\cite{palacio2024astrust}, Vasconcelos et
+al.~\cite{vasconcelos2024genprob}) shares the goal of token-level
+surfacing but is presented as standalone visualization or interface
+design; \eps's contribution is to package the same kind of
+token-level signal as the routing layer of an end-to-end filter-plus-%
+reviewer system. \papg cannot: it is one scalar per
 function. Multi-sample cannot: a $0.52/0.47$ internal split
 produces a unanimous output, as GPT-4o on Stripe Scenario A
 empirically demonstrates ($\eps = 0.878$, sample diversity $=0.00$

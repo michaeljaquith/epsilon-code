@@ -225,7 +225,10 @@ generated function does not face a $98$-token problem. They face an
 $\sim 10$-token problem at the flag threshold --- the tokens \eps
 identified as high-entropy. The function-level flag rate of $97\%$
 is not a problem to be defended against; it is the entry point to a
-localization step that no other signal in the literature provides.
+localization step that no sequence-level aggregate produces and that
+prior token-level visualizations~\cite{palacio2024astrust,vasconcelos2024genprob}
+provide only as standalone artifacts rather than as routing into a
+review loop.
 
 Figure~\ref{fig:token-focus-detail} shows the token-level \eps
 trajectory on Stripe Scenario A (GPT-4o). Of $98$ retained tokens,
@@ -264,4 +267,15 @@ false-positive rate. A detailed calibration table appears in
 The production implementation refines tier placement within
 \textsc{flagged+} using a rolling mean-\eps baseline and a top-$1$
 logprob check; neither affects the binary \textsc{flagged+} gate.
-Conformal calibration is left to future work.
+Conformal calibration is left to future work. The current thresholds
+($\eps \ge 0.30$ for \textsc{flagged}, $\eps \ge 0.95$ for
+\textsc{paused}) are calibrated empirically on GPT-4o and inherited
+by other models without formal coverage guarantees. A natural
+defense path is split conformal prediction over per-token entropy
+scores in the style of TECP~\cite{xu2025tecp}, which would convert
+the flag threshold into a coverage-controlled decision (e.g., $90\%$
+coverage of the tail of token-entropy values on a held-out
+calibration set). The current evaluation supports the thresholds as
+UX signals with measured failure rates; statistical guarantees are a
+complementary calibration step, not a replacement for the empirical
+evidence.

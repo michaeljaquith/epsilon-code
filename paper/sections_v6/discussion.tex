@@ -4,10 +4,13 @@
 \subsection{Limitations}
 \label{subsec:limitations}
 
-\paragraph{Confident wrongness.} \eps cannot detect a model that is
-wrong and confident. If training placed all mass on a deprecated API,
-the token probability is sharp and \eps is low; the system emits the
-wrong code with \textsc{complete} status. Scenario B is the
+\paragraph{Confident wrongness.} \eps catches \emph{hesitation}, not
+\emph{wrongness}. The two overlap but are not identical: a model that
+has converged on a deprecated API with sharp probability mass is
+wrong without being uncertain, and \eps is silent there. \eps cannot
+detect a model that is wrong and confident. If training placed all
+mass on a deprecated API, the token probability is sharp and \eps is
+low; the system emits the wrong code with \textsc{complete} status. Scenario B is the
 concrete example: GPT-4o emitted
 \texttt{openai.ChatCompletion.create(\ldots)} --- the v0 API, which
 raises \texttt{AttributeError} on SDK $\ge 1.0$ --- with no
